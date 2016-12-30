@@ -1,17 +1,22 @@
-PlayerInput = Script("playerInput", {Position, Player})
+PlayerInput = Script("playerInput", {Position, Player, Animation, BoxCollider})
 
 function PlayerInput:updateEach(c, dt)
+	local move = vector(0,0)
 	if love.keyboard.isDown("w") then
-		c.pos.y = c.pos.y - c.player.speed*dt
+		move.y = - c.player.speed*dt
 	end
 	if love.keyboard.isDown("s") then
-		c.pos.y = c.pos.y + c.player.speed*dt
+		move.y = c.player.speed*dt
 	end
 	if love.keyboard.isDown("a") then
-		c.pos.x = c.pos.x - c.player.speed*dt
+		move.x = - c.player.speed*dt
 	end
 	if love.keyboard.isDown("d") then
-		c.pos.x = c.pos.x + c.player.speed*dt
+		move.x = c.player.speed*dt
+	end
+
+	if move ~= vector.zero then
+		c.pos.x, c.pos.y = physics:move(c, c.pos.x + move.x, c.pos.y + move.y)
 	end
 
 	if love.keyboard.isDown("x") then

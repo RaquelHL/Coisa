@@ -54,6 +54,9 @@ function Coisa:destroy()
 end
 
 function Coisa:compare(filter)
+	if  #filter == 0 then --Sem filtro: script não atua diretamente nas coisas
+		return false
+	end
 	for i,h in ipairs(filter) do
 		if not self[h] then
 			--print("Coisa "..self.name.." doesn't have a "..h)

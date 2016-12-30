@@ -3,6 +3,7 @@ local BASE = (...):match('(.-)[^%.]+$')
 require("lib.color")
 require("lib.vector")
 
+
 require(BASE..".coisa")
 require(BASE..".scene")
 require(BASE..".Component")
@@ -24,6 +25,7 @@ cCore.debugPhysics = false
 local function init()
 	require(BASE.."scripts.renderer")
 	require(BASE.."scripts.animator")
+	require(BASE.."scripts.bumpWrapper")
 
 end
 function cCore.registerCoisa(coisa)

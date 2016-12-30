@@ -15,6 +15,7 @@ return {
 			w = 20,
 			h = 46
 		},
+		colOffset = vector(-10,-23),
 		frames = {
 			{quad = love.graphics.newQuad(0, 0, 64, 64, imagewidth, imageheight)},
 			{quad = love.graphics.newQuad(64, 0, 64, 64, imagewidth, imageheight)},

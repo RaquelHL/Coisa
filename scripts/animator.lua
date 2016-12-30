@@ -22,8 +22,15 @@ function Animator:updateEach(c)
 		c.sprite.quad = c.animation.anim.frames[c.animation.curFrame].quad
 		if c.animation.anim.offset then
 			c.sprite.offset = c.animation.anim.offset
+			if c.collider then
+				c.collider.offset = c.animation.anim.colOffset
+			end
 		end
-
+		if c.collider and c.animation.anim.colBox then
+			c.collider.w = c.animation.anim.colBox.w
+			c.collider.h = c.animation.anim.colBox.h
+			BumpWrapper:updateRect(c)
+		end
 		c.animation.lastUpdate  = love.timer.getTime()
 	end
 end

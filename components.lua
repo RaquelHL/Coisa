@@ -16,4 +16,10 @@ Animation = Component("animation", {
 	curFrame = 1
 })
 
-Player = Component("player", {speed = 40})
+BoxCollider = Component("collider",{
+	w = -1,
+	h = -1, 
+	offset = vector(0,0)
+})
+
+Player = Component("player", {speed = 80})

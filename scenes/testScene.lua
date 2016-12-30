@@ -6,7 +6,9 @@ function testScene:enter()
 
 	R.add("animsheet", "PixelChar")
 
-	tile = Coisa("tile", {Position({x = 200, y = 140}), Sprite, Animation({anim = R.anim.idle}), Player})
+	player = Coisa("player", {Position({x = 200, y = 140}), Sprite, Animation({anim = R.anim.idle}), Player, BoxCollider})
+
+	tile = Coisa("tile", {Position({x = 300, y = 140}), Sprite({texture = R.texture.tile, pivot = "center"}), BoxCollider})
 end
 
 return testScene

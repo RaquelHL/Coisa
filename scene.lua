@@ -62,11 +62,11 @@ function Scene:_enter()
 		self:init()
 	end
 	self.isInitialized = true
-	if self.enter then
-		self:enter()
-	end
 	for i,s in ipairs(self.scripts) do
 		s:_enter(dt)
+	end
+	if self.enter then
+		self:enter()
 	end
 
 end

@@ -33,7 +33,7 @@ Renderer.pivot = {
 
 function Renderer:initEach(c)
 	if c.sprite.texture then
-		c.sprite.offset = Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth(), c.sprite.texture:getHeight())
+		c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth(), c.sprite.texture:getHeight())
 	end
 end
 
@@ -43,7 +43,9 @@ function Renderer:drawEach(c)
 		if c.sprite.quad then
 			love.graphics.draw(c.sprite.texture, c.sprite.quad, c.pos.x + c.sprite.offset.x, c.pos.y + c.sprite.offset.y)
 		else
-			love.graphics.draw(tex, c.pos.x + c.sprite.offset.x, c.pos.y + c.sprite.offset.y)
+			love.graphics.draw(c.sprite.texture, c.pos.x + c.sprite.offset.x, c.pos.y + c.sprite.offset.y)
 		end
 	end
+	love.graphics.setColor(255, 0, 255)
+	love.graphics.circle("fill", c.pos.x, c.pos.y, 3)
 end
