@@ -23,6 +23,8 @@ cCore.debugPhysics = false
 
 local function init()
 	require(BASE.."scripts.renderer")
+	require(BASE.."scripts.animator")
+
 end
 function cCore.registerCoisa(coisa)
 	assert(cCore.currentScene, "No scene loaded!")

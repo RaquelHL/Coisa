@@ -33,9 +33,7 @@ function Coisa:addComponent(c)
 		c = c()
 	end
 	self[c.handle] = c
-	--if self.scene then
-		self.scene:updateCoisa(self)
-	--end
+	self.scene:updateCoisa(self)
 end
 
 function Coisa:removeComponent(c)
@@ -58,6 +56,7 @@ end
 function Coisa:compare(filter)
 	for i,h in ipairs(filter) do
 		if not self[h] then
+			--print("Coisa "..self.name.." doesn't have a "..h)
 			return false
 		end
 	end

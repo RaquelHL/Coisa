@@ -16,7 +16,7 @@ local function new(handle, data)
 		local c = clone(data)
 		if newData then
 			for k,v in pairs(newData) do
-				if c[k] then
+				if c[k] ~= nil then
 					c[k] = v
 				else
 					print("Warning: key '"..k.."' doesn't exist in component '"..self.handle.."'")

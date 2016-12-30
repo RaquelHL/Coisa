@@ -19,23 +19,21 @@ function Scene:addCoisa(coisa)
 	coisa.scene = self
 	self.coisas[coisa.id] = coisa
 	for i,s in ipairs(self.scripts) do
-		if coisa:compare(s.requirements) then
-			s.cList[coisa.id] = true
-			coisa.scripts[s.id] = true
-		end
+		s:addCoisa(coisa)	--Script decide se quer ou não
 	end
 end
 
 function Scene:updateCoisa(coisa)
-	self:removeCoisa(coisa)
-	self:addCoisa(coisa)
+	for i,s in ipairs(self.scripts) do
+		s:updateCoisa(coisa)
+	end
 end
 
 function Scene:removeCoisa(coisa)
-	self.coisas[coisa.id] = nil
 	for i in ipairs(coisa.scripts) do
-		self.scripts[i].cList[coisa.id] = nil
+		self.scripts[i]:removeCoisa(coisa.id)
 	end
+	self.coisas[coisa.id] = nil
 end
 
 function Scene:getCoisas(filter)
@@ -67,6 +65,10 @@ function Scene:_enter()
 	if self.enter then
 		self:enter()
 	end
+	for i,s in ipairs(self.scripts) do
+		s:_enter(dt)
+	end
+
 end
 
 function Scene:_update(dt)

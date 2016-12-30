@@ -30,24 +30,51 @@ function Script:require(c)
 	end
 end
 
---[[function Script:_enter()
-	if not self.isInitialized and self.init then
+function Script:addCoisa(coisa)
+	if coisa:compare(self.requirements) then
+		self.cList[coisa.id] = true	
+		coisa.scripts[self.id] = true
+		if self.initEach then
+			self:initEach(coisa)
+		end
+	end
+end
+
+function Script:updateCoisa(coisa)
+	if coisa:compare(self.requirements) then
+		if not self.cList[coisa.id] then
+			self:addCoisa(coisa)
+		end
+	else
+		if self.cList[coisa.id] then
+			self:removeCoisa(coisa)
+		end
+	end
+end
+
+function Script:removeCoisa(coisa)
+	if self.onRemoval then
+		self:onRemoval(coisa)
+	end
+	self.cList[coisa.id] = nil
+	coisa.scripts[self.id] = nil
+end
+
+function Script:_enter()
+	if self.init then
 		self:init()
 	end
-	self.isInitialized = true
-	if self.enter then
-		self:enter()
+	if self.initEach then
+		self:callEach("initEach")
 	end
-end]]
+end
 
 function Script:_update(dt)
 	if self.update then
 		self:update(dt)
 	end
 	if self.updateEach then
-		for i in ipairs(self.cList) do
-			self:updateEach(self.scene.coisas[i], dt)
-		end
+		self:callEach("updateEach", dt)
 	end
 end
 
@@ -56,14 +83,14 @@ function Script:_draw()
 		self:draw()
 	end
 	if self.drawEach then
-		for i in ipairs(self.cList) do
-			self:drawEach(self.scene.coisas[i])
-		end
+		self:callEach("drawEach")
 	end
 end
 
-function Script:removeCoisa(coisa)
-	self.coisas[coisa.id] = nil
+function Script:callEach(func, ...)
+	for i in ipairs(self.cList) do
+		self[func](self, self.scene.coisas[i], ...)
+	end
 end
 
 setmetatable(Script, {__call = function(_, ...) return new(...) end})

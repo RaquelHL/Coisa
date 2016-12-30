@@ -60,6 +60,11 @@ setmetatable(ResourceManager.texture, {__index = function(_, a)
 	return ResourceManager.get("texture", a)
 end})
 
+ResourceManager.anim = {}
+setmetatable(ResourceManager.anim, {__index = function(_, a)
+	return ResourceManager.get("anim", a)
+end})
+
 ResourceManager.scene = {}
 setmetatable(ResourceManager.scene, {__index = function(_, a)
 	return ResourceManager.get("scene", a)
