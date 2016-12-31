@@ -29,7 +29,7 @@ function Animator:updateEach(c)
 		if c.collider and c.animation.anim.colBox then
 			c.collider.w = c.animation.anim.colBox.w
 			c.collider.h = c.animation.anim.colBox.h
-			BumpWrapper:updateRect(c)
+			Physics:updateRect(c)
 		end
 		c.animation.lastUpdate  = love.timer.getTime()
 	end

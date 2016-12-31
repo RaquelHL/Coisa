@@ -16,7 +16,7 @@ function PlayerInput:updateEach(c, dt)
 	end
 
 	if move ~= vector.zero then
-		c.pos.x, c.pos.y = physics:move(c, c.pos.x + move.x, c.pos.y + move.y)
+		c.pos.x, c.pos.y = BumpWrapper:move(c, move)--physics:move(c, c.pos.x + move.x, c.pos.y + move.y)
 	end
 
 	if love.keyboard.isDown("x") then

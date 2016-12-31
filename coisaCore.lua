@@ -27,6 +27,9 @@ local function init()
 	require(BASE.."scripts.animator")
 	require(BASE.."scripts.bumpWrapper")
 
+
+	Physics = BumpWrapper
+
 end
 function cCore.registerCoisa(coisa)
 	assert(cCore.currentScene, "No scene loaded!")
@@ -34,7 +37,6 @@ function cCore.registerCoisa(coisa)
 end
 
 function cCore.registerScript(script)
-	--error("a")
 	cCore.scripts[script.id] = script
 
 end
@@ -97,6 +99,7 @@ end
 
 function clone(c)
 	if type(c) ~= "table" then return c end
+	if c.isVector then return c:clone() end
 	local n = {}
 	for k,v in pairs(c) do
 		n[k] = clone(v)

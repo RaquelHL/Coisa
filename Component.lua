@@ -4,6 +4,7 @@ meta.__index = meta
 
 local function new(handle, data)
 	local comp = {}
+	data = data or {}
 	setmetatable(comp, meta)
 
 	comp.handle = handle

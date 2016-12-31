@@ -8,7 +8,7 @@ function testScene:enter()
 
 	player = Coisa("player", {Position({x = 200, y = 140}), Sprite, Animation({anim = R.anim.idle}), Player, BoxCollider})
 
-	tile = Coisa("tile", {Position({x = 300, y = 140}), Sprite({texture = R.texture.tile, pivot = "center"}), BoxCollider})
+	tile = Coisa("tile", {Position({x = 300, y = 140}), Scale({x = 2, y = 0.5}), Sprite({texture = R.texture.tile}), BoxCollider})
 end
 
 return testScene

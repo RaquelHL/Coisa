@@ -87,8 +87,8 @@ function Script:_draw()
 	end
 end
 
-function Script:callEach(func, ...)
-	for i in ipairs(self.cList) do
+function Script:callEach(func, ...)	
+	for i in pairs(self.cList) do
 		self[func](self, self.scene.coisas[i], ...)
 	end
 end

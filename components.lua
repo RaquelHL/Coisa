@@ -1,6 +1,8 @@
 
 Position = Component("pos", vector(0,0))
 
+Scale = Component("scale", vector(1,1))
+
 Sprite = Component("sprite", {
 	texture = false,	--É necessário que o campo texture exista, então é preciso atribuir um valor qualquer
 	quad = false,
@@ -21,5 +23,3 @@ BoxCollider = Component("collider",{
 	h = -1, 
 	offset = vector(0,0)
 })
-
-Player = Component("player", {speed = 80})

@@ -6,6 +6,8 @@ local function new(x, y)
 	setmetatable(v, vector)
 	v.x = x or 0
 	v.y = y or 0
+	v.isVector = true
+
 	return v
 end
 
@@ -13,8 +15,8 @@ function vector.type(a)
 	return "vector"
 end
 
-function vector.isVector(a)
-	return a:type() == "vector"
+local function isVector(a)
+	return true
 end
 
 function vector.__tostring(a)
@@ -26,7 +28,7 @@ function vector.__unm(a)
 end
 
 function vector.__add(a,b)
-	assert(b:isVector(), "nao é vetor")
+	assert(b.isVector, "nao é vetor")
 	return new(a.x+b.x, a.y+b.y)
 end
 

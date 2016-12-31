@@ -1,9 +1,9 @@
 require("coisaCore")
+--require("scripts.playerInput")
 
-require("scripts.playerInput")
 
 function love.load()
-	cCore.loadScene(R.scene.testScene)
+	cCore.loadScene(R.scene.pongScene)
 end
 
 function love.update(dt)

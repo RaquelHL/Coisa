@@ -1,5 +1,5 @@
 
-Renderer = Script("renderer", {Position, Sprite})
+Renderer = Script("renderer", {Sprite})
 
 Renderer.pivot = {
 	top_left = function(w, h)
@@ -33,19 +33,22 @@ Renderer.pivot = {
 
 function Renderer:initEach(c)
 	if c.sprite.texture then
-		c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth(), c.sprite.texture:getHeight())
+		local scale = c.scale or vector(1,1)
+		c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth() * scale.x, c.sprite.texture:getHeight() * scale.y)
 	end
 end
 
 function Renderer:drawEach(c)
 	love.graphics.setColor(c.sprite.color:value())
 	if c.sprite.texture then
+		local pos = c.pos or vector(0,0)
+		local scale = c.scale or vector(1,1)
 		if c.sprite.quad then
-			love.graphics.draw(c.sprite.texture, c.sprite.quad, c.pos.x + c.sprite.offset.x, c.pos.y + c.sprite.offset.y)
+			love.graphics.draw(c.sprite.texture, c.sprite.quad, pos.x + c.sprite.offset.x, pos.y + c.sprite.offset.y, 0, scale.x, scale.y)
 		else
-			love.graphics.draw(c.sprite.texture, c.pos.x + c.sprite.offset.x, c.pos.y + c.sprite.offset.y)
+			love.graphics.draw(c.sprite.texture, pos.x + c.sprite.offset.x, pos.y + c.sprite.offset.y, 0, scale.x, scale.y)
 		end
 	end
 	love.graphics.setColor(255, 0, 255)
-	love.graphics.circle("fill", c.pos.x, c.pos.y, 3)
+	--love.graphics.circle("fill", c.pos.x, c.pos.y, 3)
 end

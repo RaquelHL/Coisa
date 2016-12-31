@@ -14,32 +14,38 @@ local function new(name, components)
 
 	c.scripts = {}
 	
-	cCore.registerCoisa(c)
 
 	for k,comp in pairs(components) do
-		c:addComponent(comp)
+		c:addComponent(comp, true)
 	end
 
 	if not c.pos then
-		c:addComponent(Position) 
+		c:addComponent(Position, true) 
 	end
 
+	cCore.registerCoisa(c)
+
+	c.scene:updateCoisa(c)
 
 	return c
 end
 
-function Coisa:addComponent(c)
+function Coisa:addComponent(c, skipUpdate)
 	if c:type() == "componentConstructor" then 	--Assim dá pra chamar o componente com ou sem parenteses
 		c = c()
 	end
 	self[c.handle] = c
-	self.scene:updateCoisa(self)
+	if not skipUpdate then
+		self.scene:updateCoisa(self)
+	end
 end
 
-function Coisa:removeComponent(c)
+function Coisa:removeComponent(c, skipUpdate)
 	local handle = c.handle or c
 	self[handle] = nil
-	self.scene:updateCoisa(self)
+	if not skipUpdate then
+		self.scene:updateCoisa(self)
+	end
 end
 
 function Coisa:init()
