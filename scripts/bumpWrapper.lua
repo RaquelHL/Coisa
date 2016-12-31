@@ -3,12 +3,11 @@ BumpWrapper = Script({BoxCollider})
 local bump = require("lib.bump")
 local bumpdebug = require("lib.bump_debug")
 
-function BumpWrapper:init()
+function BumpWrapper:initOnce()
 	physics = bump.newWorld(40)
-
 end
 
-function BumpWrapper:initEach(c)
+function BumpWrapper:init(c)
 	local scale = c.scale or vector(1,1)
 	if c.collider.w == -1 then
 		if c.sprite and c.sprite.texture and not c.sprite.quad then
@@ -45,6 +44,6 @@ function BumpWrapper:moveTo(c, m, ...)
 	physics:update(c, m.x, m.y)
 end
 
-function BumpWrapper:draw()
+function BumpWrapper:drawOnce()
 	--bumpdebug.draw(physics)
 end

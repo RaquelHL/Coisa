@@ -1,12 +1,12 @@
 Animator = Script({Sprite, Animation})
 
-function Animator:initEach(c)
+function Animator:init(c)
 	if c.animation.anim then
 		c.sprite.texture = c.animation.anim.texture
 	end
 end
 
-function Animator:updateEach(c)
+function Animator:update(c)
 	if not c.animation.anim then
 		return
 	end

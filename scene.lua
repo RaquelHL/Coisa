@@ -80,6 +80,15 @@ function Scene:_update(dt)
 	end
 end
 
+function Scene:_lateUpdate(dt)
+	if self.lateUpdate then
+		self:lateUpdate(dt)
+	end
+	for i,s in ipairs(self.scripts) do
+		s:_lateUpdate(dt)
+	end
+end
+
 function Scene:_draw()
 	if self.draw then
 		self:draw()

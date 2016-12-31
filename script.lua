@@ -33,8 +33,8 @@ function Script:addCoisa(coisa)
 	if coisa:compare(self.requirements) then
 		self.cList[coisa.id] = true	
 		coisa.scripts[self.id] = true
-		if self.initEach then
-			self:initEach(coisa)
+		if self.init then
+			self:init(coisa)
 		end
 	end
 end
@@ -60,29 +60,38 @@ function Script:removeCoisa(coisa)
 end
 
 function Script:_enter()
-	if self.init then
-		self:init()
+	if self.initOnce then
+		self:initOnce()
 	end
-	if self.initEach then
-		self:callEach("initEach")
+	if self.init then
+		self:callEach("init")
 	end
 end
 
 function Script:_update(dt)
-	if self.update then
-		self:update(dt)
+	if self.updateOnce then
+		self:updateOnce(dt)
 	end
-	if self.updateEach then
-		self:callEach("updateEach", dt)
+	if self.update then
+		self:callEach("update", dt)
+	end
+end
+
+function Script:_lateUpdate(dt)
+	if self.lateUpdateOnce then
+		self:lateUpdateOnce(dt)
+	end
+	if self.lateUpdate then
+		self:callEach("lateUpdate", dt)
 	end
 end
 
 function Script:_draw()
-	if self.draw then
-		self:draw()
+	if self.drawOnce then
+		self:drawOnce()
 	end
-	if self.drawEach then
-		self:callEach("drawEach")
+	if self.draw then
+		self:callEach("draw")
 	end
 end
 

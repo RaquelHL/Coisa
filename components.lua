@@ -23,3 +23,8 @@ BoxCollider = Component("collider",{
 	h = -1, 
 	offset = vector(0,0)
 })
+
+Bind = Component("bind", {
+	other = false,
+	localPos = vector(0,0)
+})

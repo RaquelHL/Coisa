@@ -31,14 +31,14 @@ Renderer.pivot = {
 	end
 }
 
-function Renderer:initEach(c)
+function Renderer:init(c)
 	if c.sprite.texture then
 		local scale = c.scale or vector(1,1)
 		c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth() * scale.x, c.sprite.texture:getHeight() * scale.y)
 	end
 end
 
-function Renderer:drawEach(c)
+function Renderer:draw(c)
 	love.graphics.setColor(c.sprite.color:value())
 	if c.sprite.texture then
 		local pos = c.pos or vector(0,0)

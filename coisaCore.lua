@@ -27,6 +27,7 @@ local function init()
 	require(BASE.."scripts.animator")
 	require(BASE.."scripts.bumpWrapper")
 
+	require(BASE.."scripts.binder")
 
 	Physics = BumpWrapper
 
@@ -67,6 +68,7 @@ end
 function cCore.update(dt)
 	if cCore.currentScene then
 		cCore.scenes[cCore.currentScene]:_update(dt)
+		cCore.scenes[cCore.currentScene]:_lateUpdate(dt)
 	end
 end
 

@@ -1,6 +1,6 @@
 PlayerInput = Script({Position, Player, Animation, BoxCollider})
 
-function PlayerInput:updateEach(c, dt)
+function PlayerInput:update(c, dt)
 	local move = vector(0,0)
 	if love.keyboard.isDown("w") then
 		move.y = - c.player.speed*dt
