@@ -1,4 +1,4 @@
-Animator = Script("animator", {Sprite, Animation})
+Animator = Script({Sprite, Animation})
 
 function Animator:initEach(c)
 	if c.animation.anim then

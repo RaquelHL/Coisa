@@ -3,11 +3,10 @@ Script.__index = Script
 
 local nextID = 1
 
-local function new(handle, c)
+local function new(c)
 	local s = {}
 	setmetatable(s, Script)
 
-	s.handle = handle
 	s.id = nextID
 	nextID = nextID + 1
 

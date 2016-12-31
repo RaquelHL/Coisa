@@ -1,4 +1,4 @@
-PlayerInput = Script("playerInput", {Position, Player, Animation, BoxCollider})
+PlayerInput = Script({Position, Player, Animation, BoxCollider})
 
 function PlayerInput:updateEach(c, dt)
 	local move = vector(0,0)

@@ -43,7 +43,7 @@ function pongScene:enter()
 
 end
 
-padController = Script("padController", {Pad})
+padController = Script({Pad})
 
 function padController.move(c, m)
 	m = m * c.pad.speed
@@ -52,7 +52,7 @@ function padController.move(c, m)
 	c.pos = vector(nX,nY)
 end
 
-ballController = Script("ballController", {Ball})
+ballController = Script({Ball})
 
 function ballController:updateEach(c, dt)
 	nX, nY, cols = Physics:move(c, c.ball.direction*c.ball.speed*dt)
@@ -71,7 +71,7 @@ function ballController:updateEach(c, dt)
 	end
 end
 
-playerInput = Script("playerInput", {Pad, Player})
+playerInput = Script({Pad, Player})
 
 function playerInput:updateEach(c, dt)
 	local move = vector(0,0)
@@ -84,7 +84,7 @@ function playerInput:updateEach(c, dt)
 	padController.move(c, move)
 end
 
-iaInput = Script("IAInput", {Pad, IA})
+iaInput = Script({Pad, IA})
 
 function iaInput:updateEach(c, dt)
 	local move = nil

@@ -1,5 +1,5 @@
 
-Renderer = Script("renderer", {Sprite})
+Renderer = Script({Sprite})
 
 Renderer.pivot = {
 	top_left = function(w, h)

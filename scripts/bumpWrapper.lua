@@ -1,4 +1,4 @@
-BumpWrapper = Script("bumpWrapper", {BoxCollider})
+BumpWrapper = Script({BoxCollider})
 
 local bump = require("lib.bump")
 local bumpdebug = require("lib.bump_debug")
