@@ -3,6 +3,8 @@ Position = Component("pos", vector(0,0))
 
 Scale = Component("scale", vector(1,1))
 
+Rotation = Component("rot", {r = 0})
+
 Sprite = Component("sprite", {
 	texture = false,	--É necessário que o campo texture exista, então é preciso atribuir um valor qualquer
 	quad = false,

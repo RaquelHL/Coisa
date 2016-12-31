@@ -19,6 +19,8 @@ local function new(c)
 	s.cList = {}
 	cCore.registerScript(s)
 
+	s.isInitialized = false
+
 	return s
 end
 
@@ -59,10 +61,14 @@ function Script:removeCoisa(coisa)
 	coisa.scripts[self.id] = nil
 end
 
-function Script:_enter()
-	if self.initOnce then
-		self:initOnce()
+function Script:reset()
+	if self.onRemoval then
+		self:callEach("onRemoval")
 	end
+	self.cList = {}
+end
+
+function Script:_init()
 	if self.init then
 		self:callEach("init")
 	end
@@ -97,7 +103,7 @@ end
 
 function Script:callEach(func, ...)	
 	for i in pairs(self.cList) do
-		self[func](self, self.scene.coisas[i], ...)
+		self[func](self, cCore.currentScene.coisas[i], ...)
 	end
 end
 

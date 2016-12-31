@@ -20,8 +20,6 @@ cCore.currentScene = nil
 
 cCore.scripts = {}
 
-cCore.debugPhysics = false
-
 local function init()
 	require(BASE.."scripts.renderer")
 	require(BASE.."scripts.animator")
@@ -32,14 +30,24 @@ local function init()
 	Physics = BumpWrapper
 
 end
+
 function cCore.registerCoisa(coisa)
 	assert(cCore.currentScene, "No scene loaded!")
-	cCore.scenes[cCore.currentScene]:addCoisa(coisa)
+	cCore.currentScene:addCoisa(coisa)
+	for i,s in ipairs(cCore.scripts) do
+		s:addCoisa(coisa)	--Script decide se quer ou não
+	end
+end
+
+function cCore.removeCoisa(coisa)
+	cCore.currentScene:removeCoisa(coisa)
+	for i in ipairs(coisa.scripts) do
+		cCore.scripts[i]:removeCoisa(coisa.id)
+	end
 end
 
 function cCore.registerScript(script)
 	cCore.scripts[script.id] = script
-
 end
 
 function cCore.registerScene(scene)
@@ -47,55 +55,74 @@ function cCore.registerScene(scene)
 end
 
 function cCore.loadScene(s)
-	if type(s) == "string" then
-		if cCore.scenes[s] then
+	if type(s) == "table" then
+		if s.isScene then
+			if cCore.currentScene then
+				cCore.currentScene:_exit()
+				for i,scr in ipairs(cCore.scripts) do
+					scr:reset()
+				end
+			end
 			cCore.currentScene = s
-			cCore.scenes[s]:setScripts(cCore.scripts)
+			for k,c in pairs(s.coisas) do
+				for i,scr in ipairs(cCore.scripts) do
+					scr:addCoisa(c)
+				end
+			end
 		else
-			error("Invalid scene: '"..s.."'")
+			error("Invalid scene: '"..tostring(s).."'")
 		end
 	else
-		if type(s) == "table" then
-			cCore.loadScene(s.name)
+		if type(s) == "string" then
+			cCore.loadScene(cCore.scenes[s])
 			return
 		else
 			error("Invalid argument '"..tostring(s).."'")
 		end
 	end
-	cCore.scenes[cCore.currentScene]:_enter()
+	cCore.currentScene:_enter()
 end
 
 function cCore.update(dt)
 	if cCore.currentScene then
-		cCore.scenes[cCore.currentScene]:_update(dt)
-		cCore.scenes[cCore.currentScene]:_lateUpdate(dt)
+		cCore.currentScene:_update(dt)
+
+		for i,s in ipairs(cCore.scripts) do
+			s:_update(dt)
+		end
+		for i,s in ipairs(cCore.scripts) do
+			s:_lateUpdate(dt)
+		end
+		cCore.currentScene:_lateUpdate(dt)
 	end
+
 end
 
 function cCore:draw()
 	if cCore.currentScene then
-		cCore.scenes[cCore.currentScene]:_draw()
+		cCore.currentScene:_draw()
 	end
-	if cCore.debugPhysics then
-		bumpdebug.draw(physics)
+
+	for i,s in ipairs(cCore.scripts) do
+		s:_draw()
 	end
 end
 
 function cCore:mousepressed(x,y,b)
-	if cCore.currentScene and cCore.scenes[cCore.currentScene].mousepressed then
-		cCore.scenes[cCore.currentScene]:mousepressed(x,y,b)
+	if cCore.currentScene and cCore.currentScene.mousepressed then
+		cCore.currentScene:mousepressed(x,y,b)
 	end
 end
 
 function cCore:keypressed(k)
-	if cCore.currentScene and cCore.scenes[cCore.currentScene].keypressed then
-		cCore.scenes[cCore.currentScene]:keypressed(k)
+	if cCore.currentScene and cCore.currentScene.keypressed then
+		cCore.currentScene:keypressed(k)
 	end
 end
 
 function cCore:textinput(t)
-	if cCore.currentScene and cCore.scenes[cCore.currentScene].textinput then
-		cCore.scenes[cCore.currentScene]:textinput(t)
+	if cCore.currentScene and cCore.currentScene.textinput then
+		cCore.currentScene:textinput(t)
 	end
 end
 

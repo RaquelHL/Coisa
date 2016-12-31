@@ -34,7 +34,7 @@ Renderer.pivot = {
 function Renderer:init(c)
 	if c.sprite.texture then
 		local scale = c.scale or vector(1,1)
-		c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth() * scale.x, c.sprite.texture:getHeight() * scale.y)
+		c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth(), c.sprite.texture:getHeight())
 	end
 end
 
@@ -42,11 +42,12 @@ function Renderer:draw(c)
 	love.graphics.setColor(c.sprite.color:value())
 	if c.sprite.texture then
 		local pos = c.pos or vector(0,0)
+		local rot = c.rot and c.rot.r or 0
 		local scale = c.scale or vector(1,1)
 		if c.sprite.quad then
-			love.graphics.draw(c.sprite.texture, c.sprite.quad, pos.x + c.sprite.offset.x, pos.y + c.sprite.offset.y, 0, scale.x, scale.y)
+			love.graphics.draw(c.sprite.texture, c.sprite.quad, pos.x, pos.y, rot, scale.x, scale.y, -c.sprite.offset.x, -c.sprite.offset.y)
 		else
-			love.graphics.draw(c.sprite.texture, pos.x + c.sprite.offset.x, pos.y + c.sprite.offset.y, 0, scale.x, scale.y)
+			love.graphics.draw(c.sprite.texture, pos.x, pos.y, rot, scale.x, scale.y, -c.sprite.offset.x, -c.sprite.offset.y)
 		end
 	end
 	love.graphics.setColor(255, 0, 255)

@@ -8,7 +8,7 @@ Ball = Component("ball", {direction = vector(1,1), speed = 200})
 
 local wSize = vector(400,600)
 
-function pongScene:enter()
+function pongScene:init()
 	love.window.setMode(wSize.x,wSize.y)
 
 	ball = Coisa("ball", {
@@ -32,19 +32,12 @@ function pongScene:enter()
 		BoxCollider, Pad, IA
 	})
 
-	c = Coisa("negocio", {
-		Position({x = 10, y = 20}),
-		Scale({x = 0.1, y = 0.1}),
-		Sprite({texture = R.texture.tile}),
-		Bind({other = playerPad})
-	})
-
 	Coisa("leftWall", {
-		Position({x = -5}),
+		Position({x = -10}),
 		BoxCollider({w = 10, h = wSize.y})
 	})
 	Coisa("rightWall", {
-		Position({x = wSize.x-5}),
+		Position({x = wSize.x}),
 		BoxCollider({w = 10, h = wSize.y})
 	})
 
@@ -98,7 +91,6 @@ function playerInput:update(c, dt)
 		m = vector(dt,0)
 	end	
 	c.pad:move(m)
-	--padController.move(c, move)
 end
 
 iaInput = Script({Pad, IA})

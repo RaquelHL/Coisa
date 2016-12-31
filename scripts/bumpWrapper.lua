@@ -3,16 +3,14 @@ BumpWrapper = Script({BoxCollider})
 local bump = require("lib.bump")
 local bumpdebug = require("lib.bump_debug")
 
-function BumpWrapper:initOnce()
-	physics = bump.newWorld(40)
-end
+local physics = bump.newWorld(40)
 
 function BumpWrapper:init(c)
 	local scale = c.scale or vector(1,1)
 	if c.collider.w == -1 then
 		if c.sprite and c.sprite.texture and not c.sprite.quad then
 			c.collider.w = c.sprite.texture:getWidth() * scale.x
-			c.collider.offset.x = c.sprite.offset.x
+			c.collider.offset.x = c.sprite.offset.x * scale.x
 		else
 			c.collider.w = 1
 		end
@@ -20,7 +18,7 @@ function BumpWrapper:init(c)
 	if c.collider.h == -1 then
 		if c.sprite and c.sprite.texture and not c.sprite.quad then
 			c.collider.h = c.sprite.texture:getHeight() * scale.y
-			c.collider.offset.y = c.sprite.offset.y
+			c.collider.offset.y = c.sprite.offset.y * scale.y
 		else
 			c.collider.h = 1
 		end
@@ -45,5 +43,11 @@ function BumpWrapper:moveTo(c, m, ...)
 end
 
 function BumpWrapper:drawOnce()
-	--bumpdebug.draw(physics)
+	if self.debug then
+		bumpdebug.draw(physics)
+	end
+end
+
+function BumpWrapper:onRemoval(c)
+	physics:remove(c)
 end

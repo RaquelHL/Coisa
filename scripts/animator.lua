@@ -3,6 +3,7 @@ Animator = Script({Sprite, Animation})
 function Animator:init(c)
 	if c.animation.anim then
 		c.sprite.texture = c.animation.anim.texture
+		c.sprite.quad = c.animation.anim.frames[c.animation.curFrame].quad
 	end
 end
 

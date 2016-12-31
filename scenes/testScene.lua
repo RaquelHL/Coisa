@@ -1,6 +1,6 @@
 testScene = Scene("testScene")
 
-function testScene:enter()
+function testScene:init()
 
 	love.graphics.setBackgroundColor(200, 200, 200)
 

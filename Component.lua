@@ -2,12 +2,19 @@ Component = {}
 local meta = {}
 meta.__index = meta
 
-local function new(handle, data)
+local function new(handle, data, super)
 	local comp = {}
 	data = data or {}
 	setmetatable(comp, meta)
 
 	comp.handle = handle
+
+	if super then
+		if super:type() == "componentConstructor" then
+			super = super()
+		end
+		comp.super = super
+	end
 
 	comp.clone = function(self)
 		return clone(self)
@@ -15,6 +22,14 @@ local function new(handle, data)
 
 	comp.newComp = function(self, newData)
 		local c = clone(data)
+		if super then
+			for k,v in pairs(super) do
+				if k ~= "handle" and not c[k] then
+					c[k] = v					
+				end
+			end
+			c.super = super
+		end
 		if newData then
 			for k,v in pairs(newData) do
 				if c[k] ~= nil then

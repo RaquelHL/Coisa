@@ -25,7 +25,7 @@ local function new(name, components)
 
 	cCore.registerCoisa(c)
 
-	c.scene:updateCoisa(c)
+	--c.scene:updateCoisa(c)
 
 	return c
 end
@@ -35,8 +35,13 @@ function Coisa:addComponent(c, skipUpdate)
 		c = c()
 	end
 	self[c.handle] = c
+	if c.super then
+		self[c.super.handle] = true
+	end
 	if not skipUpdate then
-		self.scene:updateCoisa(self)
+		for i,v in ipairs(self.scripts) do
+			error("chegou aqui")
+		end
 	end
 end
 
@@ -44,7 +49,9 @@ function Coisa:removeComponent(c, skipUpdate)
 	local handle = c.handle or c
 	self[handle] = nil
 	if not skipUpdate then
-		self.scene:updateCoisa(self)
+		for i,v in ipairs(self.scripts) do
+			error("chegou aqui")
+		end
 	end
 end
 
@@ -56,7 +63,7 @@ end
 
 function Coisa:destroy()
 	self.toDestroy = true
-	self.scene:removeCoisa(self)
+	cCore:removeCoisa(self)
 end
 
 function Coisa:compare(filter)
