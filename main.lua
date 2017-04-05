@@ -1,6 +1,4 @@
 require("coisaCore")
---require("scripts.playerInput")
-
 
 function love.load()
 	cCore.loadScene(R.scene.pongScene)

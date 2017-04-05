@@ -1,17 +1,17 @@
 local BASE = (...):match('(.-)[^%.]+$')
-
+print("BASE = ", BASE)
 require("lib.color")
 require("lib.vector")
 
 
 require(BASE..".coisa")
 require(BASE..".scene")
-require(BASE..".Component")
-require(BASE..".Script")
+require(BASE..".component")
+require(BASE..".script")
 
 require(BASE..".components")
 
-R = require("lib.ResourceManager")
+R = require("lib.resourceManager")
 
 cCore = {}
 
@@ -21,6 +21,7 @@ cCore.currentScene = nil
 cCore.scripts = {}
 
 local function init()
+
 	require(BASE.."scripts.renderer")
 	require(BASE.."scripts.animator")
 	require(BASE.."scripts.bumpWrapper")
@@ -34,20 +35,19 @@ end
 function cCore.registerCoisa(coisa)
 	assert(cCore.currentScene, "No scene loaded!")
 	cCore.currentScene:addCoisa(coisa)
-	for i,s in ipairs(cCore.scripts) do
-		s:addCoisa(coisa)	--Script decide se quer ou não
-	end
+	cCore.callScripts("addCoisa", coisa)
 end
 
 function cCore.removeCoisa(coisa)
 	cCore.currentScene:removeCoisa(coisa)
-	for i in ipairs(coisa.scripts) do
-		cCore.scripts[i]:removeCoisa(coisa.id)
-	end
+	cCore.callScripts("removeCoisa", coisa.id)
 end
 
 function cCore.registerScript(script)
-	cCore.scripts[script.id] = script
+	if not cCore.scripts[script.sType] then
+		cCore.scripts[script.sType] = {}
+	end
+	cCore.scripts[script.sType][script.id] = script
 end
 
 function cCore.registerScene(scene)
@@ -59,15 +59,11 @@ function cCore.loadScene(s)
 		if s.isScene then
 			if cCore.currentScene then
 				cCore.currentScene:_exit()
-				for i,scr in ipairs(cCore.scripts) do
-					scr:reset()
-				end
+				cCore.callScripts("reset")
 			end
 			cCore.currentScene = s
 			for k,c in pairs(s.coisas) do
-				for i,scr in ipairs(cCore.scripts) do
-					scr:addCoisa(c)
-				end
+				callScripts("addCoisa", c)
 			end
 		else
 			error("Invalid scene: '"..tostring(s).."'")
@@ -83,32 +79,35 @@ function cCore.loadScene(s)
 	cCore.currentScene:_enter()
 end
 
+function cCore.callScripts(func, ...)
+	for k,sType in pairs(cCore.scripts) do
+		for k,scr in pairs(sType) do
+			scr[func](scr, ...)
+		end
+	end
+end
+
 function cCore.update(dt)
 	if cCore.currentScene then
 		cCore.currentScene:_update(dt)
 
-		for i,s in ipairs(cCore.scripts) do
-			s:_update(dt)
-		end
-		for i,s in ipairs(cCore.scripts) do
-			s:_lateUpdate(dt)
-		end
+		cCore.callScripts("_update", dt)
+		cCore.callScripts("_lateUpdate", dt)
+
 		cCore.currentScene:_lateUpdate(dt)
 	end
 
 end
 
-function cCore:draw()
+function cCore.draw()
 	if cCore.currentScene then
 		cCore.currentScene:_draw()
 	end
 
-	for i,s in ipairs(cCore.scripts) do
-		s:_draw()
-	end
+	cCore.callScripts("_draw")
 end
 
-function cCore:mousepressed(x,y,b)
+function cCore.mousepressed(x,y,b)
 	if cCore.currentScene and cCore.currentScene.mousepressed then
 		cCore.currentScene:mousepressed(x,y,b)
 	end

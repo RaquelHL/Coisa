@@ -3,7 +3,12 @@ Script.__index = Script
 
 local nextID = 1
 
-local function new(c)
+Script.type = {	--A ordem aqui também é a ordem de chamada de callbacks
+	game = 1,
+	system = 2,
+	editor = 3}
+
+local function new(c, sType)
 	local s = {}
 	setmetatable(s, Script)
 
@@ -17,6 +22,9 @@ local function new(c)
 	end
 
 	s.cList = {}
+
+	s.sType = sType or Script.type.game
+
 	cCore.registerScript(s)
 
 	s.isInitialized = false
@@ -93,11 +101,14 @@ function Script:_lateUpdate(dt)
 end
 
 function Script:_draw()
-	if self.drawOnce then
-		self:drawOnce()
+	if self.drawBefore then
+		self:drawBefore()
 	end
 	if self.draw then
 		self:callEach("draw")
+	end
+	if self.drawAfter then
+		self:drawAfter()
 	end
 end
 
@@ -107,4 +118,7 @@ function Script:callEach(func, ...)
 	end
 end
 
-setmetatable(Script, {__call = function(_, ...) return new(...) end})
+setmetatable(Script, {__call = function(_, c, sType) return new(c, sType) end})
+
+IScript = {}
+setmetatable(IScript, {__call = function(_, c) return new(c, Script.type.interface) end})

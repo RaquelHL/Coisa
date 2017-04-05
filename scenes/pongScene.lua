@@ -10,6 +10,7 @@ local wSize = vector(400,600)
 
 function pongScene:init()
 	love.window.setMode(wSize.x,wSize.y)
+	love.graphics.setBackgroundColor(200, 200, 255)
 
 	ball = Coisa("ball", {
 		Position({x = wSize.x/2, y = wSize.y/2}),
@@ -74,6 +75,7 @@ function ballController:update(c, dt)
 		end
 	end
 	c.pos = vector(nX,nY)
+	c.pos:floor()
 	if c.pos.y < -50 or c.pos.y > wSize.y+50 then
 		c.pos = vector(wSize.x/2, wSize.y/2)
 		Physics:moveTo(c, c.pos)

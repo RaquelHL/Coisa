@@ -83,6 +83,12 @@ function vector.angleTo(a, b)
 	return math.atan2(b.y-a.y, b.x-a.x)
 end
 
+function vector.floor(a)
+	a.x = math.floor(a.x)
+	a.y = math.floor(a.y)
+	return a
+end
+
 function vector.clone(a)
 	return vector(a.x,a.y)
 end

@@ -25,7 +25,7 @@ local function new(handle, data, super)
 		if super then
 			for k,v in pairs(super) do
 				if k ~= "handle" and not c[k] then
-					c[k] = v					
+					c[k] = c[k] or v					
 				end
 			end
 			c.super = super

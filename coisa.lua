@@ -19,13 +19,7 @@ local function new(name, components)
 		c:addComponent(comp, true)
 	end
 
-	if not c.pos then
-		c:addComponent(Position, true) 
-	end
-
 	cCore.registerCoisa(c)
-
-	--c.scene:updateCoisa(c)
 
 	return c
 end
@@ -36,29 +30,13 @@ function Coisa:addComponent(c, skipUpdate)
 	end
 	self[c.handle] = c
 	if c.super then
-		self[c.super.handle] = true
-	end
-	if not skipUpdate then
-		for i,v in ipairs(self.scripts) do
-			error("chegou aqui")
-		end
+		self[c.super.handle] = c
 	end
 end
 
 function Coisa:removeComponent(c, skipUpdate)
 	local handle = c.handle or c
 	self[handle] = nil
-	if not skipUpdate then
-		for i,v in ipairs(self.scripts) do
-			error("chegou aqui")
-		end
-	end
-end
-
-function Coisa:init()
-	for k,c in pairs(self.components) do
-		c:initComp()
-	end
 end
 
 function Coisa:destroy()
