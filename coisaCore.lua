@@ -1,7 +1,7 @@
 local BASE = (...):match('(.-)[^%.]+$')
 print("BASE = ", BASE)
 require("lib.color")
-require("lib.vector")
+vector = require("lib.vector")
 
 
 require(BASE..".coisa")
@@ -127,12 +127,11 @@ end
 
 function clone(c)
 	if type(c) ~= "table" then return c end
-	if c.isVector then return c:clone() end
 	local n = {}
-	for k,v in pairs(c) do
+	for k,v in pairs(c) do 
 		n[k] = clone(v)
 	end
-	return n
+	return setmetatable(n, getmetatable(c))
 end
 
 return init()

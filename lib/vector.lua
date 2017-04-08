@@ -1,81 +1,102 @@
-vector = {}
+local vector = {}
 vector.__index = vector
 
 local function new(x, y)
-	local v = {}
-	setmetatable(v, vector)
-	v.x = x or 0
-	v.y = y or 0
-	v.isVector = true
-
-	return v
+	return setmetatable({x = x or 0, y = y or 0}, vector)
 end
 
-function vector.type(a)
-	return "vector"
+function vector.clone(v)
+	return new(v.x, v.y)
 end
 
-local function isVector(a)
-	return true
+function vector.add(a, b)
+	a.x = a.x + b.x
+	a.y = a.y + b.y
+end
+
+function vector.sub(a, b)
+	a.x = a.x - b.x
+	a.y = a.y - b.y
+end
+
+function vector.mul(a, b)
+	if (type(b) == "number") then
+		a.x = a.x*b
+		a.y = a.y*b
+	else	
+		a.x = a.x*b.x
+		a.y = a.y*b.y
+	end
+end
+
+function vector.div(a,b)
+	a.x = a.x / b
+	a.y = a.y / b
+end
+
+function vector.unm(a)
+	a.x = -a.x
+	a.y = -a.y
+end
+
+function vector.__unm(a)
+	local b = clone(a)
+	vector.unm(b)
+	return b
+end
+
+function vector.__add(a,b)
+	local c = clone(a)
+	vector.add(c,b)
+	return c
+end
+
+function vector.__sub(a,b)
+	local c = clone(a)
+	vector.sub(c,b)
+	return c
+end
+
+function vector.__mul(a,b)
+	local c = clone(a)
+	vector.mul(c,b)
+	return c
+end
+
+function vector.__div(a,b)
+	local c = clone(a)
+	vector.div(c,b)
+	return c
+end
+
+function vector.__eq(a,b)
+	return a.x == b.x and a.y == b.y
 end
 
 function vector.__tostring(a)
 	return "["..a.x..","..a.y.."]"
 end
 
-function vector.__unm(a)
-	return new(-a.x, -a.y)
+function vector.rotate(v, o)
+	local cos, sin = math.cos(o), math.sin(o)
+	v.x = cos * v.x - sin * v.y
+	v.y = sin * v.x + cos * v.y
+	return v
 end
 
-function vector.__add(a,b)
-	assert(b.isVector, "nao é vetor")
-	return new(a.x+b.x, a.y+b.y)
+function vector.magnitude(v)
+	return vector.dist(vector.zero, v)
 end
 
-function vector.__sub(a,b)
-	assert(b:isVector(), "Vector expected; Got "..type(b))
-	return new(a.x-b.x, a.y-b.y)
-end
-
-function vector.__mul(a,b)
-	if (type(b) == "number") then
-		return new(a.x*b, a.y*b)
-	else
-		if (b:isVector()) then
-			return new(a.x*b.x, a.y*b.y)
-		else
-			error("Number or vector expected; Got "..type(b))
-		end
-	end
-end
-
-function vector.__div(a,b)
-	assert(type(b) == "number", "Number expected; Got "..type(b))
-	return new(a.x/b, a.y/b)
-end
-
-function vector.__eq(a,b)
-	assert(b:isVector(), "Vector expected; Got "..type(b))
-	return a.x == b.x and a.y == b.y
-end
-
-function vector:rotate(o)
-	self.x = math.cos(o) * self.x - math.sin(o) * self.y
-	self.y = math.sin(o) * self.x + math.cos(o) * self.y
-	return self
-end
-
-function vector.magnitude(a)
-	return vector.dist(vector.zero, a)
+function vector.dist2(a,b)
+	return math.pow(a.x-b.x,2)+math.pow(a.y-b.y,2)
 end
 
 function vector.dist(a,b)
-	assert(a:isVector() and b:isVector(), "Vector expected; Got "..type(a).." and "..type(b))
-	return math.sqrt(math.pow(a.x-b.x,2)+math.pow(a.y-b.y,2))
+	return math.sqrt(vector.dist2(a,b))
 end
 
 function vector.fromAngle(r)
-	assert(type(r) == "number", "Number expected; Got "..type(r))
 	return new(math.cos(r),math.sin(r))
 end
 
@@ -89,19 +110,19 @@ function vector.floor(a)
 	return a
 end
 
-function vector.clone(a)
-	return vector(a.x,a.y)
+function vector.isVector(v)
+	return v.x and v.y;
 end
 
-setmetatable(vector, {__call = function(_, ...) return new(...) end})
-
-
 --Constantes
-vector.zero = vector(0,0)
-vector.forward = vector(1,0)
-vector.back = vector(-1,0)
+vector.zero = new(0,0)
+vector.forward = new(1,0)
+vector.back = new(-1,0)
 
-vector.up = vector(0,-1)
-vector.right = vector(1,0)
-vector.down = vector(0,1)
-vector.left = vector(-1,0)
+vector.up = new(0,-1)
+vector.right = new(1,0)
+vector.down = new(0,1)
+vector.left = new(-1,0)
+
+setmetatable(vector, {__call = function(_, ...) return new(...) end})
+return vector
