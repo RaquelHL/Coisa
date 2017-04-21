@@ -1,7 +1,7 @@
 require("coisaCore")
 
 function love.load()
-	cCore.loadScene(R.scene.pongScene)
+	cCore.loadScene(R.scene.testScene)
 end
 
 function love.update(dt)

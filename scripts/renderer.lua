@@ -34,7 +34,10 @@ Renderer.pivot = {
 function Renderer:init(c)
 	if c.sprite.texture then
 		local scale = c.scale or vector(1,1)
-		c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth(), c.sprite.texture:getHeight())
+		print(type(c.sprite.texture))
+		if (type(c.sprite.texture) ~= "userdata") then
+			c.sprite.offset = -Renderer.pivot[c.sprite.pivot](c.sprite.texture:getWidth(), c.sprite.texture:getHeight())
+		end
 	end
 end
 
