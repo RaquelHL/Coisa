@@ -1,6 +1,6 @@
-local BASE = (...):match('(.-)[^%.]+$')
-require("lib.color")
-vector = require("lib.vector")
+BASE = (...):match('(.-)[^%.]+$')
+require(BASE.."lib.color")
+vector = require(BASE.."lib.vector")
 
 
 require(BASE..".coisa")
@@ -10,7 +10,7 @@ require(BASE..".script")
 
 require(BASE..".components")
 
-R = require("lib.resourceManager")
+R = require(BASE.."lib.resourceManager")
 
 cCore = {}
 
@@ -129,7 +129,7 @@ end
 function clone(c)
 	if type(c) ~= "table" then return c end
 	local n = {}
-	for k,v in pairs(c) do 
+	for k,v in pairs(c) do
 		n[k] = clone(v)
 	end
 	return setmetatable(n, getmetatable(c))

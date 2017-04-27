@@ -1,7 +1,7 @@
 BumpWrapper = Script({BoxCollider})
 
-local bump = require("lib.bump")
-local bumpdebug = require("lib.bump_debug")
+local bump = require(BASE.."lib.bump")
+local bumpdebug = require(BASE.."lib.bump_debug")
 
 local physics = bump.newWorld(40)
 

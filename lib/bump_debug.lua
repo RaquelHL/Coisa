@@ -1,4 +1,4 @@
-local bump = require 'lib.bump'
+local bump = require(BASE..'lib.bump')
 
 local bump_debug = {}
 
@@ -31,12 +31,12 @@ function bump_debug.draw(world)
     if(v.collider.isSlope) then
       love.graphics.setColor(255, 0, 255, 255)
       local x, y, w, h = world:getRect(v)
-      
+
       love.graphics.line(x, y+((1-v.collider.leftY)*h), x+w, y+((1-v.collider.rightY)*h))
     end
     love.graphics.setColor(255, 255, 0, 255)
     love.graphics.rectangle("line", world:getRect(v))
-    
+
   end
 end
 
