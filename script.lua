@@ -77,6 +77,9 @@ function Script:reset()
 end
 
 function Script:_init()
+	if self.initOnce then
+		self:initOnce()
+	end
 	if self.init then
 		self:callEach("init")
 	end
@@ -107,8 +110,11 @@ function Script:_draw()
 	if self.draw then
 		self:callEach("draw")
 	end
+end
+
+function Script:_drawAfter()
 	if self.drawAfter then
-		self:drawAfter()
+		self:callEach("drawAfter")
 	end
 end
 
