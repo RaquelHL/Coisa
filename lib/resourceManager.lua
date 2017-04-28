@@ -4,6 +4,7 @@ local resources = {}
 
 ResourceManager.textureFolder = "textures"
 ResourceManager.scenesFolder = "scenes"
+ResourceManager.mapsFolder = "maps"
 
 local creatorFunctions = {
 	texture = function(name)

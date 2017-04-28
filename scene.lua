@@ -68,7 +68,7 @@ function Scene:_draw()
 end
 
 function Scene:loadMap(name)
-	map = require("maps."..name)
+	map = require(R.mapsFolder.."."..name)
 	map.tiles = {}
 
 	for i,ts in ipairs(map.tilesets) do
@@ -101,13 +101,13 @@ function Scene:loadMap(name)
 
 	for k,l in pairs(map.layers) do
 		if (l.properties.static) then 	--Estatico, nunca muda. Poe tudo num spriteBatch em um Coisa
-			local layerGO = Coisa(l.name)	 
+			local layerGO = Coisa(l.name)
 			local batchs = {}	--Precisa de um spritebatch para cada tileset
 		    local curTile = 1
 
 		    --Pra não criar um collider por tile, detecta os tiles adjacentes pra criar um collider só
 
-		    local colX = 0	
+		    local colX = 0
 		    local colY = 0
 		    local colW = 0
 		    local colCount = 0
@@ -127,12 +127,12 @@ function Scene:loadMap(name)
 			    		if(l.properties.collision) then
 			    			if(map.tiles[l.data[curTile]].isSlope) then
 			    				local colliderGO = Coisa("col"..colCount, {Position({x = i*map.tilewidth, y = j*map.tileheight}), BoxCollider({w = map.tilewidth, h = map.tileheight})})
-				    			
-				    			colliderGO.collider.isSlope = true	
+
+				    			colliderGO.collider.isSlope = true
 				    			colliderGO.collider.rightY = map.tiles[l.data[curTile]].rightY
 				    			colliderGO.collider.leftY = map.tiles[l.data[curTile]].leftY
 
-				    			
+
 				    			colCount = colCount + 1
 
 				    			closeCollider = true
@@ -154,16 +154,16 @@ function Scene:loadMap(name)
 			    	if ((l.data[curTile] == 0 or i == (map.width-1) or closeCollider) and l.properties.collision and colW>0) then
 		    			colCount = colCount + 1
 		    			local colliderGO = Coisa("col"..colCount, {Position({x = colX, y = colY}), BoxCollider({w = colW*map.tilewidth, h = map.tileheight})})
-		    			
+
 
 		    			colliderGO.tileID = l.data[curTile]
 		    			if(l.data[curTile] == 21)then
-		    				colliderGO.isSlope = true	
+		    				colliderGO.isSlope = true
 		    			end
 		    			--layerGO:addChild(colliderGO)
 
 		    			colW = 0
-		    		
+
 			    	end
 			    	curTile = curTile + 1
 		    	end
