@@ -41,7 +41,7 @@ end
 
 function Script:addCoisa(coisa)
 	if coisa:compare(self.requirements) then
-		self.cList[coisa.id] = true	
+		self.cList[coisa.id] = true
 		coisa.scripts[self.id] = true
 		if self.init then
 			self:init(coisa)
@@ -62,11 +62,14 @@ function Script:updateCoisa(coisa)
 end
 
 function Script:removeCoisa(coisa)
-	if self.onRemoval then
-		self:onRemoval(coisa)
-	end
-	self.cList[coisa.id] = nil
-	coisa.scripts[self.id] = nil
+    -- Verifica se o script possui essa coisa, se sim, retira a coisa do script
+    if coisa:compare(self.requirements) then
+        if self.onRemoval then
+            self:onRemoval(coisa)
+        end
+        self.cList[coisa.id] = nil
+        coisa.scripts[self.id] = nil
+    end
 end
 
 function Script:reset()
@@ -118,7 +121,7 @@ function Script:_drawAfter()
 	end
 end
 
-function Script:callEach(func, ...)	
+function Script:callEach(func, ...)
 	for i in pairs(self.cList) do
 		self[func](self, cCore.currentScene.coisas[i], ...)
 	end

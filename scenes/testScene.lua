@@ -11,6 +11,10 @@ function testScene:init()
 	tile = Coisa("tile", {Position({x = 300, y = 140}), Scale({x = 2, y = 0.5}), Sprite({texture = R.texture.tile}), BoxCollider})
 
 	self:loadMap("level1")
+
+    c = Coisa("teste")
+    -- print("teste id ",c)
+    c:destroy()
 end
 
 function testScene:update(dt)

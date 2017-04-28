@@ -13,7 +13,7 @@ local function new(name, components)
 	nextID = nextID + 1
 
 	c.scripts = {}
-	
+
 
 	for k,comp in pairs(components) do
 		c:addComponent(comp, true)
@@ -41,7 +41,7 @@ end
 
 function Coisa:destroy()
 	self.toDestroy = true
-	cCore:removeCoisa(self)
+	cCore.removeCoisa(self)
 end
 
 function Coisa:compare(filter)
@@ -50,7 +50,7 @@ function Coisa:compare(filter)
 	end
 	for i,h in ipairs(filter) do
 		if not self[h] then
-			--print("Coisa "..self.name.." doesn't have a "..h)
+			-- print("Coisa "..self.name.." doesn't have a "..h)
 			return false
 		end
 	end

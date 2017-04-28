@@ -39,7 +39,7 @@ end
 
 function cCore.removeCoisa(coisa)
 	cCore.currentScene:removeCoisa(coisa)
-	cCore.callScripts("removeCoisa", coisa.id)
+	cCore.callScripts("removeCoisa", coisa)
 end
 
 function cCore.registerScript(script)
