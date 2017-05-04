@@ -39,36 +39,36 @@ function Script:require(c)
 	end
 end
 
-function Script:addCoisa(coisa)
-	if coisa:compare(self.requirements) then
-		self.cList[coisa.id] = true
-		coisa.scripts[self.id] = true
+function Script:addTreco(treco)
+	if treco:compare(self.requirements) then
+		self.cList[treco.id] = true
+		treco.scripts[self.id] = true
 		if self.init then
-			self:init(coisa)
+			self:init(treco)
 		end
 	end
 end
 
-function Script:updateCoisa(coisa)
-	if coisa:compare(self.requirements) then
-		if not self.cList[coisa.id] then
-			self:addCoisa(coisa)
+function Script:updateTreco(treco)
+	if treco:compare(self.requirements) then
+		if not self.cList[treco.id] then
+			self:addTreco(treco)
 		end
 	else
-		if self.cList[coisa.id] then
-			self:removeCoisa(coisa)
+		if self.cList[treco.id] then
+			self:removeTreco(treco)
 		end
 	end
 end
 
-function Script:removeCoisa(coisa)
-    -- Verifica se o script possui essa coisa, se sim, retira a coisa do script
-    if coisa:compare(self.requirements) then
+function Script:removeTreco(treco)
+    -- Verifica se o script possui essa treco, se sim, retira a treco do script
+    if treco:compare(self.requirements) then
         if self.onRemoval then
-            self:onRemoval(coisa)
+            self:onRemoval(treco)
         end
-        self.cList[coisa.id] = nil
-        coisa.scripts[self.id] = nil
+        self.cList[treco.id] = nil
+        treco.scripts[self.id] = nil
     end
 end
 
@@ -123,7 +123,7 @@ end
 
 function Script:callEach(func, ...)
 	for i in pairs(self.cList) do
-		self[func](self, cCore.currentScene.coisas[i], ...)
+		self[func](self, cCore.currentScene.trecos[i], ...)
 	end
 end
 

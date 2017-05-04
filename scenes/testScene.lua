@@ -6,13 +6,13 @@ function testScene:init()
 
 	R.add("animsheet", "PixelChar")
 
-	player = Coisa("player", {Position({x = 200, y = 140}), Sprite, Animation({anim = R.anim.idle}), Player, BoxCollider})
+	player = Treco("player", {Position({x = 200, y = 140}), Sprite, Animation({anim = R.anim.idle}), Player, BoxCollider})
 
-	tile = Coisa("tile", {Position({x = 300, y = 140}), Scale({x = 2, y = 0.5}), Sprite({texture = R.texture.tile}), BoxCollider})
+	tile = Treco("tile", {Position({x = 300, y = 140}), Scale({x = 2, y = 0.5}), Sprite({texture = R.texture.tile}), BoxCollider})
 
 	self:loadMap("level1")
 
-    c = Coisa("teste")
+    c = Treco("teste")
     -- print("teste id ",c)
     c:destroy()
 end

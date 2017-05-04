@@ -1,4 +1,4 @@
-require("coisaCore")
+require("trecoCore")
 
 function love.load()
 	cCore.loadScene(R.scene.testScene)
