@@ -25,7 +25,7 @@ local function new(c, sType)
 
 	s.sType = sType or Script.type.game
 
-	cCore.registerScript(s)
+	tCore.registerScript(s)
 
 	s.isInitialized = false
 
@@ -123,7 +123,7 @@ end
 
 function Script:callEach(func, ...)
 	for i in pairs(self.cList) do
-		self[func](self, cCore.currentScene.trecos[i], ...)
+		self[func](self, tCore.currentScene.trecos[i], ...)
 	end
 end
 

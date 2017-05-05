@@ -9,7 +9,7 @@ local function new(name)
 	s.name = name
 	s.isScene = true
 
-	cCore.registerScene(s)
+	tCore.registerScene(s)
 	return s
 end
 
