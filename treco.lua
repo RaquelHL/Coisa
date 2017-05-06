@@ -3,12 +3,11 @@ Treco.__index = Treco
 
 local nextID = 1
 
-local function new(name, components)
-	components = components or {}
+local function new(...)
+	components = {...} or {}
 	local c = {}
 	setmetatable(c, Treco)
 
-	c.name = name or "Treco"
 	c.id = nextID
 	nextID = nextID + 1
 

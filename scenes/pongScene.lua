@@ -12,35 +12,33 @@ function pongScene:init()
 	love.window.setMode(wSize.x,wSize.y)
 	love.graphics.setBackgroundColor(200, 200, 255)
 
-	ball = Treco("ball", {
-		Position({x = wSize.x/2, y = wSize.y/2}),
-		Scale({x = 0.2, y = 0.2}),
-		Sprite({texture = R.texture.tile}),
-		BoxCollider, Ball
-	})
+	ball = Treco(
+		Position(wSize.x/2, wSize.y/2),
+		Scale(0.2, 0.2),
+		Sprite(R.texture.tile),
+		BoxCollider, Ball)
 
-	playerPad = Treco("pPad", {
-		Position({x = wSize.x/2, y = wSize.y-30}), 
-		Scale({x = 1.5, y = 0.3}), 
-		Sprite({texture = R.texture.tile, color = Color(20,20,200)}),
-		BoxCollider, Pad, Player
-	})
+	playerPad = Treco(
+		Position(wSize.x/2, wSize.y-30), 
+		Scale(1.5, 0.3), 
+		Sprite(R.texture.tile, Color(20,20,200)),
+		BoxCollider, Pad, Player)
 
-	iaPad = Treco("iaPad", {
-		Position({x = wSize.x/2, y = 30}), 
-		Scale({x = 1.5, y = 0.3}), 
-		Sprite({texture = R.texture.tile, color = Color(200,20,20)}),
-		BoxCollider, Pad, IA
-	})
+	iaPad = Treco(
+		Position(wSize.x/2, 30), 
+		Scale(1.5, 0.3), 
+		Sprite(R.texture.tile, Color(200,20,20)),
+		BoxCollider, Pad, IA)
 
-	Treco("leftWall", {
-		Position({x = -10}),
-		BoxCollider({w = 10, h = wSize.y})
-	})
-	Treco("rightWall", {
-		Position({x = wSize.x}),
-		BoxCollider({w = 10, h = wSize.y})
-	})
+	--Left wall
+	Treco(
+		Position(10),
+		BoxCollider(10, wSize.y))
+
+	--Right wall
+	Treco(
+		Position(wSize.x),
+		BoxCollider(10, wSize.y))
 
 end
 

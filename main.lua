@@ -1,7 +1,8 @@
 require("trecoCore")
 
 function love.load()
-	tCore.loadScene(R.scene.testScene)
+	tCore.loadScene(R.scene.pongScene)
+
 end
 
 function love.update(dt)

@@ -6,15 +6,10 @@ function testScene:init()
 
 	R.add("animsheet", "PixelChar")
 
-	player = Treco("player", {Position({x = 200, y = 140}), Sprite, Animation({anim = R.anim.idle}), Player, BoxCollider})
+	player = Treco(Position(200, 140), Sprite, Animation(R.anim.idle), Player, BoxCollider)
+	tile = Treco(Position(300, 140), Scale(2, 0.5), Sprite(R.texture.tile), BoxCollider)
 
-	tile = Treco("tile", {Position({x = 300, y = 140}), Scale({x = 2, y = 0.5}), Sprite({texture = R.texture.tile}), BoxCollider})
-
-	self:loadMap("level1")
-
-    c = Treco("teste")
-    -- print("teste id ",c)
-    c:destroy()
+	--self:loadMap("level1")
 end
 
 function testScene:update(dt)
