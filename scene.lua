@@ -67,6 +67,18 @@ function Scene:_draw()
 	end
 end
 
+function Scene:_joystickpressed(j, b)
+	if self.joystickpressed then
+		self:joystickpressed(j, b)
+	end
+end
+
+function Scene:_joystickreleased(j, b)
+	if self.joystickreleased then
+		self:joystickreleased(j, b)
+	end
+end
+
 function Scene:loadMap(name)
 	map = require(R.mapsFolder.."."..name)
 	map.tiles = {}
@@ -126,7 +138,7 @@ function Scene:loadMap(name)
 
 			    		if(l.properties.collision) then
 			    			if(map.tiles[l.data[curTile]].isSlope) then
-			    				local colliderGO = Treco("col"..colCount, {Position({x = i*map.tilewidth, y = j*map.tileheight}), BoxCollider({w = map.tilewidth, h = map.tileheight})})
+			    				local colliderGO = Treco("col"..colCount, {Position({x = i*map.tilewidth, y = j*map.tileheight}), AllCollider({w = map.tilewidth, h = map.tileheight})})
 
 				    			colliderGO.collider.isSlope = true
 				    			colliderGO.collider.rightY = map.tiles[l.data[curTile]].rightY
@@ -153,7 +165,7 @@ function Scene:loadMap(name)
 
 			    	if ((l.data[curTile] == 0 or i == (map.width-1) or closeCollider) and l.properties.collision and colW>0) then
 		    			colCount = colCount + 1
-		    			local colliderGO = Treco("col"..colCount, {Position({x = colX, y = colY}), BoxCollider({w = colW*map.tilewidth, h = map.tileheight})})
+		    			local colliderGO = Treco("col"..colCount, {Position({x = colX, y = colY}), AllCollider({w = colW*map.tilewidth, h = map.tileheight})})
 
 
 		    			colliderGO.tileID = l.data[curTile]

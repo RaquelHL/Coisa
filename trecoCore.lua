@@ -23,11 +23,11 @@ local function init()
 
 	require(BASE.."scripts.renderer")
 	require(BASE.."scripts.animator")
-	require(BASE.."scripts.bumpWrapper")
+	--require(BASE.."scripts.allCollWrapper")
 
 	require(BASE.."scripts.binder")
 
-	Physics = BumpWrapper
+	Physics = acWrapper
 
 end
 
@@ -115,8 +115,30 @@ function tCore.mousepressed(x,y,b)
 end
 
 function tCore:keypressed(k)
+	tCore.callScripts("_keypressed", k)
 	if tCore.currentScene and tCore.currentScene.keypressed then
 		tCore.currentScene:keypressed(k)
+	end
+end
+
+function tCore:keyreleased(k)
+	tCore.callScripts("_keyreleased", k)
+	if tCore.currentScene and tCore.currentScene.keypressed then
+		tCore.currentScene:keypressed(k)
+	end
+end
+
+function tCore:joystickpressed(j, b)
+	tCore.callScripts("_joystickpressed", j, b)
+	if tCore.currentScene and tCore.currentScene.joystickpressed then
+		tCore.currentScene:joystickpressed(j, b)
+	end
+end
+
+function tCore:joystickreleased(j, b)
+	tCore.callScripts("_joystickreleased", j, b)
+	if tCore.currentScene and tCore.currentScene.joystickreleased then
+		tCore.currentScene:joystickreleased(j, b)
 	end
 end
 
