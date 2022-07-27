@@ -1,13 +1,14 @@
-Treco = {}
-Treco.__index = Treco
+Coisa = {}
+Coisa.__index = Coisa
 
 local nextID = 1
 
 local function new(...)
 	components = {...} or {}
 	local c = {}
-	setmetatable(c, Treco)
+	setmetatable(c, Coisa)
 
+	c.name = name or "Coisa"
 	c.id = nextID
 	nextID = nextID + 1
 
@@ -18,12 +19,12 @@ local function new(...)
 		c:addComponent(comp, true)
 	end
 
-	cCore.registerTreco(c)
+	cCore.registerCoisa(c)
 
 	return c
 end
 
-function Treco:addComponent(c, skipUpdate)
+function Coisa:addComponent(c, skipUpdate)
 	if c:type() == "componentConstructor" then 	--Assim dá pra chamar o componente com ou sem parenteses
 		c = c()
 	end
@@ -33,27 +34,27 @@ function Treco:addComponent(c, skipUpdate)
 	end
 end
 
-function Treco:removeComponent(c, skipUpdate)
+function Coisa:removeComponent(c, skipUpdate)
 	local handle = c.handle or c
 	self[handle] = nil
 end
 
-function Treco:destroy()
+function Coisa:destroy()
 	self.toDestroy = true
-	cCore.removeTreco(self)
+	cCore.removeCoisa(self)
 end
 
-function Treco:compare(filter)
-	if  #filter == 0 then --Sem filtro: script não atua diretamente nas trecos
+function Coisa:compare(filter)
+	if  #filter == 0 then --Sem filtro: script não atua diretamente nas coisas
 		return false
 	end
 	for i,h in ipairs(filter) do
 		if not self[h] then
-			-- print("Treco "..self.name.." doesn't have a "..h)
+			-- print("Coisa "..self.name.." doesn't have a "..h)
 			return false
 		end
 	end
 	return true
 end
 
-setmetatable(Treco, {__call = function(_, ...) return new(...) end})
+setmetatable(Coisa, {__call = function(_, ...) return new(...) end})

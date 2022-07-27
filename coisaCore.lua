@@ -3,7 +3,7 @@ require(BASE.."lib.color")
 vector = require(BASE.."lib.vector")
 
 
-require(BASE..".treco")
+require(BASE..".coisa")
 require(BASE..".scene")
 require(BASE..".component")
 require(BASE..".script")
@@ -31,15 +31,15 @@ local function init()
 
 end
 
-function cCore.registerTreco(treco)
+function cCore.registerCoisa(coisa)
 	assert(cCore.currentScene, "No scene loaded!")
-	cCore.currentScene:addTreco(treco)
-	cCore.callScripts("addTreco", treco)
+	cCore.currentScene:addCoisa(coisa)
+	cCore.callScripts("addCoisa", coisa)
 end
 
-function cCore.removeTreco(treco)
-	cCore.currentScene:removeTreco(treco)
-	cCore.callScripts("removeTreco", treco)
+function cCore.removeCoisa(coisa)
+	cCore.currentScene:removeCoisa(coisa)
+	cCore.callScripts("removeCoisa", coisa)
 end
 
 function cCore.registerScript(script)
@@ -61,8 +61,8 @@ function cCore.loadScene(s)
 				cCore.callScripts("reset")
 			end
 			cCore.currentScene = s
-			for k,c in pairs(s.trecos) do
-				callScripts("addTreco", c)
+			for k,c in pairs(s.coisas) do
+				callScripts("addCoisa", c)
 			end
 		else
 			error("Invalid scene: '"..tostring(s).."'")

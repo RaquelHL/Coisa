@@ -1,4 +1,4 @@
-require("trecoCore")
+require("coisaCore")
 
 function love.load()
 	cCore.loadScene(R.scene.pongScene)

@@ -6,8 +6,8 @@ function testScene:init()
 
 	R.add("animsheet", "PixelChar")
 
-	player = Treco(Position(200, 140), Sprite, Animation(R.anim.idle), Player, BoxCollider)
-	tile = Treco(Position(300, 140), Scale(2, 0.5), Sprite(R.texture.tile), BoxCollider)
+	player = Coisa(Position(200, 140), Sprite, Animation(R.anim.idle), Player, BoxCollider)
+	tile = Coisa(Position(300, 140), Scale(2, 0.5), Sprite(R.texture.tile), BoxCollider)
 
 	--self:loadMap("level1")
 end

@@ -5,7 +5,7 @@ local function new(name)
 	local s = {}
 	setmetatable(s, Scene)
 
-	s.trecos = {}	--Tabela de trecos na cena
+	s.coisas = {}	--Tabela de coisas na cena
 	s.name = name
 	s.isScene = true
 
@@ -13,24 +13,24 @@ local function new(name)
 	return s
 end
 
-function Scene:addTreco(treco)
-	--treco.scene = self 	--Necessário?
-	self.trecos[treco.id] = treco
+function Scene:addCoisa(coisa)
+	--coisa.scene = self 	--Necessário?
+	self.coisas[coisa.id] = coisa
 end
 
-function Scene:removeTreco(treco)
-	self.trecos[treco.id] = nil
+function Scene:removeCoisa(coisa)
+	self.coisas[coisa.id] = nil
 end
 
-function Scene:getTrecos(filter)
-	if not filter then return self.trecos end
-	local fTrecos = {}
-	for i,c in ipairs(self.trecos) do
+function Scene:getCoisas(filter)
+	if not filter then return self.coisas end
+	local fCoisas = {}
+	for i,c in ipairs(self.coisas) do
 		if c:compare(filter) then
-			fTrecos[#fTrecos+1] = c.id
+			fCoisas[#fCoisas+1] = c.id
 		end
 	end
-	return fTrecos
+	return fCoisas
 end
 
 function Scene:_enter()
@@ -112,8 +112,8 @@ function Scene:loadMap(name)
 	end
 
 	for k,l in pairs(map.layers) do
-		if (l.properties.static) then 	--Estatico, nunca muda. Poe tudo num spriteBatch em um Treco
-			local layerGO = Treco(l.name)
+		if (l.properties.static) then 	--Estatico, nunca muda. Poe tudo num spriteBatch em um Coisa
+			local layerGO = Coisa(l.name)
 			local batchs = {}	--Precisa de um spritebatch para cada tileset
 		    local curTile = 1
 
@@ -138,7 +138,7 @@ function Scene:loadMap(name)
 
 			    		if(l.properties.collision) then
 			    			if(map.tiles[l.data[curTile]].isSlope) then
-			    				local colliderGO = Treco("col"..colCount, {Position({x = i*map.tilewidth, y = j*map.tileheight}), AllCollider({w = map.tilewidth, h = map.tileheight})})
+			    				local colliderGO = Coisa("col"..colCount, {Position({x = i*map.tilewidth, y = j*map.tileheight}), AllCollider({w = map.tilewidth, h = map.tileheight})})
 
 				    			colliderGO.collider.isSlope = true
 				    			colliderGO.collider.rightY = map.tiles[l.data[curTile]].rightY
@@ -165,7 +165,7 @@ function Scene:loadMap(name)
 
 			    	if ((l.data[curTile] == 0 or i == (map.width-1) or closeCollider) and l.properties.collision and colW>0) then
 		    			colCount = colCount + 1
-		    			local colliderGO = Treco("col"..colCount, {Position({x = colX, y = colY}), AllCollider({w = colW*map.tilewidth, h = map.tileheight})})
+		    			local colliderGO = Coisa("col"..colCount, {Position({x = colX, y = colY}), AllCollider({w = colW*map.tilewidth, h = map.tileheight})})
 
 
 		    			colliderGO.tileID = l.data[curTile]
@@ -182,7 +182,7 @@ function Scene:loadMap(name)
 		    end
 
 		    for i,b in ipairs(batchs) do
-		    	local tsGO = Treco("tileset "..i, {Sprite({texture = b})})
+		    	local tsGO = Coisa("tileset "..i, {Sprite({texture = b})})
 		    	--layerGO:addChild(tsGO)
 		    end
 

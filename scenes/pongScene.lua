@@ -12,31 +12,31 @@ function pongScene:init()
 	love.window.setMode(wSize.x,wSize.y)
 	love.graphics.setBackgroundColor(200, 200, 255)
 
-	ball = Treco(
+	ball = Coisa(
 		Position(wSize.x/2, wSize.y/2),
 		Scale(0.2, 0.2),
 		Sprite(R.texture.tile),
 		BoxCollider, Ball)
 
-	playerPad = Treco(
-		Position(wSize.x/2, wSize.y-30), 
-		Scale(1.5, 0.3), 
+	playerPad = Coisa(
+		Position(wSize.x/2, wSize.y-30),
+		Scale(1.5, 0.3),
 		Sprite(R.texture.tile, Color(20,20,200)),
 		BoxCollider, Pad, Player)
 
-	iaPad = Treco(
-		Position(wSize.x/2, 30), 
-		Scale(1.5, 0.3), 
+	iaPad = Coisa(
+		Position(wSize.x/2, 30),
+		Scale(1.5, 0.3),
 		Sprite(R.texture.tile, Color(200,20,20)),
 		BoxCollider, Pad, IA)
 
 	--Left wall
-	Treco(
+	Coisa(
 		Position(10),
 		BoxCollider(10, wSize.y))
 
 	--Right wall
-	Treco(
+	Coisa(
 		Position(wSize.x),
 		BoxCollider(10, wSize.y))
 
