@@ -12,12 +12,12 @@ require(BASE..".components")
 
 R = require(BASE.."lib.resourceManager")
 
-tCore = {}
+cCore = {}
 
-tCore.scenes = {}
-tCore.currentScene = nil
+cCore.scenes = {}
+cCore.currentScene = nil
 
-tCore.scripts = {}
+cCore.scripts = {}
 
 local function init()
 
@@ -31,36 +31,36 @@ local function init()
 
 end
 
-function tCore.registerTreco(treco)
-	assert(tCore.currentScene, "No scene loaded!")
-	tCore.currentScene:addTreco(treco)
-	tCore.callScripts("addTreco", treco)
+function cCore.registerTreco(treco)
+	assert(cCore.currentScene, "No scene loaded!")
+	cCore.currentScene:addTreco(treco)
+	cCore.callScripts("addTreco", treco)
 end
 
-function tCore.removeTreco(treco)
-	tCore.currentScene:removeTreco(treco)
-	tCore.callScripts("removeTreco", treco)
+function cCore.removeTreco(treco)
+	cCore.currentScene:removeTreco(treco)
+	cCore.callScripts("removeTreco", treco)
 end
 
-function tCore.registerScript(script)
-	if not tCore.scripts[script.sType] then
-		tCore.scripts[script.sType] = {}
+function cCore.registerScript(script)
+	if not cCore.scripts[script.sType] then
+		cCore.scripts[script.sType] = {}
 	end
-	tCore.scripts[script.sType][script.id] = script
+	cCore.scripts[script.sType][script.id] = script
 end
 
-function tCore.registerScene(scene)
-	tCore.scenes[scene.name] = scene
+function cCore.registerScene(scene)
+	cCore.scenes[scene.name] = scene
 end
 
-function tCore.loadScene(s)
+function cCore.loadScene(s)
 	if type(s) == "table" then
 		if s.isScene then
-			if tCore.currentScene then
-				tCore.currentScene:_exit()
-				tCore.callScripts("reset")
+			if cCore.currentScene then
+				cCore.currentScene:_exit()
+				cCore.callScripts("reset")
 			end
-			tCore.currentScene = s
+			cCore.currentScene = s
 			for k,c in pairs(s.trecos) do
 				callScripts("addTreco", c)
 			end
@@ -69,82 +69,82 @@ function tCore.loadScene(s)
 		end
 	else
 		if type(s) == "string" then
-			tCore.loadScene(tCore.scenes[s])
+			cCore.loadScene(cCore.scenes[s])
 			return
 		else
 			error("Invalid argument '"..tostring(s).."'")
 		end
 	end
-	tCore.currentScene:_enter()
+	cCore.currentScene:_enter()
 end
 
-function tCore.callScripts(func, ...)
-	for k,sType in pairs(tCore.scripts) do
+function cCore.callScripts(func, ...)
+	for k,sType in pairs(cCore.scripts) do
 		for k,scr in pairs(sType) do
 			scr[func](scr, ...)
 		end
 	end
 end
 
-function tCore.update(dt)
-	if tCore.currentScene then
-		tCore.currentScene:_update(dt)
+function cCore.update(dt)
+	if cCore.currentScene then
+		cCore.currentScene:_update(dt)
 
-		tCore.callScripts("_update", dt)
-		tCore.callScripts("_lateUpdate", dt)
+		cCore.callScripts("_update", dt)
+		cCore.callScripts("_lateUpdate", dt)
 
-		tCore.currentScene:_lateUpdate(dt)
+		cCore.currentScene:_lateUpdate(dt)
 	end
 
 end
 
-function tCore.draw()
-	tCore.callScripts("_draw")
+function cCore.draw()
+	cCore.callScripts("_draw")
 
-	if tCore.currentScene then
-		tCore.currentScene:_draw()
+	if cCore.currentScene then
+		cCore.currentScene:_draw()
 	end
-	-- tCore.callScripts("_drawAfter")
+	-- cCore.callScripts("_drawAfter")
 
 end
 
-function tCore.mousepressed(x,y,b)
-	if tCore.currentScene and tCore.currentScene.mousepressed then
-		tCore.currentScene:mousepressed(x,y,b)
+function cCore.mousepressed(x,y,b)
+	if cCore.currentScene and cCore.currentScene.mousepressed then
+		cCore.currentScene:mousepressed(x,y,b)
 	end
 end
 
-function tCore:keypressed(k)
-	tCore.callScripts("_keypressed", k)
-	if tCore.currentScene and tCore.currentScene.keypressed then
-		tCore.currentScene:keypressed(k)
+function cCore:keypressed(k)
+	cCore.callScripts("_keypressed", k)
+	if cCore.currentScene and cCore.currentScene.keypressed then
+		cCore.currentScene:keypressed(k)
 	end
 end
 
-function tCore:keyreleased(k)
-	tCore.callScripts("_keyreleased", k)
-	if tCore.currentScene and tCore.currentScene.keypressed then
-		tCore.currentScene:keypressed(k)
+function cCore:keyreleased(k)
+	cCore.callScripts("_keyreleased", k)
+	if cCore.currentScene and cCore.currentScene.keypressed then
+		cCore.currentScene:keypressed(k)
 	end
 end
 
-function tCore:joystickpressed(j, b)
-	tCore.callScripts("_joystickpressed", j, b)
-	if tCore.currentScene and tCore.currentScene.joystickpressed then
-		tCore.currentScene:joystickpressed(j, b)
+function cCore:joystickpressed(j, b)
+	cCore.callScripts("_joystickpressed", j, b)
+	if cCore.currentScene and cCore.currentScene.joystickpressed then
+		cCore.currentScene:joystickpressed(j, b)
 	end
 end
 
 function tCore:joystickreleased(j, b)
-	tCore.callScripts("_joystickreleased", j, b)
-	if tCore.currentScene and tCore.currentScene.joystickreleased then
-		tCore.currentScene:joystickreleased(j, b)
+	cCore.callScripts("_joystickreleased", j, b)
+	if cCore.currentScene and cCore.currentScene.joystickreleased then
+		cCore.currentScene:joystickreleased(j, b)
 	end
 end
 
-function tCore:textinput(t)
-	if tCore.currentScene and tCore.currentScene.textinput then
-		tCore.currentScene:textinput(t)
+function cCore:textinput(t)
+	if cCore.currentScene and cCore.currentScene.textinput then
+		cCore.currentScene:textinput(t)
 	end
 end
 

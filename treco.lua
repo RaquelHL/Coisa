@@ -18,7 +18,7 @@ local function new(...)
 		c:addComponent(comp, true)
 	end
 
-	tCore.registerTreco(c)
+	cCore.registerTreco(c)
 
 	return c
 end
@@ -40,7 +40,7 @@ end
 
 function Treco:destroy()
 	self.toDestroy = true
-	tCore.removeTreco(self)
+	cCore.removeTreco(self)
 end
 
 function Treco:compare(filter)

@@ -1,16 +1,15 @@
 require("trecoCore")
 
 function love.load()
-	tCore.loadScene(R.scene.pongScene)
-
+	cCore.loadScene(R.scene.pongScene)
 end
 
 function love.update(dt)
-	tCore.update(dt)
+	cCore.update(dt)
 end
 
 function love.draw()
-	tCore.draw()
+	cCore.draw()
 end
 
 function love.keypressed(key, scancode, isrepeat)
