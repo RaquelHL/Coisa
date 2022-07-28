@@ -1,200 +1,226 @@
 # Cöisa
-Implementação no LÖVE de um sistema entidade/componente, junto com outras funcionalidades que facilitam o desenvolvimento de jogos.
+Implementation of a Entity Component System for the LÖVE framework, with 
+some other features to speed up game development. "Coisa", meaning "thing"
+in portuguese, is the name it's used to refer to an entity.
 
-### Exemplo
+### Example
+This example shows the simplest usage of Coisa, just adding a texture on 
+the screen with the built-in components `Position` and `Sprite`:
 ```lua
 require("lib.coisa.coisaCore")
 
 function love.load()
-	testeScene = Scene("testeScene")    --Cria uma scene "testeScene"
-	cCore.loadScene(testeScene)        --Carrega a scene
+    testScene = Scene("testScene")    -- Creates the scene "testScene"
+    cCore.loadScene(testScene)        -- Loads the scene
 
-	caixa = Coisa("caixa", {    -- Cria uma coisa chamada caixa
-		Position({x = 200, y = 140}),     --Na posição [200,140]
-		Sprite({texture = R.texture.tile})})    --Com a textura tile.png
+    tile = Coisa(                     -- Creates a new coisa
+        Position(200, 140),           -- At position [200,140]
+        Sprite(R.texture.tile)        -- With the texture resource tile.png
 end
 
+-- forward update and draw callbacks to coisa
 function love.update(dt)
-	cCore.update(dt)
+    cCore.update(dt)
 end
-
 function love.draw()
-	cCore.draw()
+    cCore.draw()
 end
 ```
-Neste exemplo, simplesmente desenhamos uma textura(tile.png) na posição [200, 140]. Parece que estamos apenas complicando as coisas simples, mas à medida em que o código ficar mais complexo essa estrutura vai acabar na verdade simplificando as coisas.
 
+###Structure
 
-### Estrutura
-----------
-![Estrutura](http://imgur.com/WmhH9em.png)
+![Structure](https://i.imgur.com/eLLx4ms.png)
 
-Basicamente, o sistema deixa uma `Scene` ativa por vez, que funciona como um estado de jogo(menu, loading, jogo, etc). Uma `Scene` mantem uma lista de `Coisa`, que são "entidades de jogo", que por sua vez mantem uma lista de `Component`. Tudo no jogo é uma coisa, o personagem, o inimigo, a parede, o chão, etc. Cada coisa é definida pelos componentes que ela tem. Por exemplo, o chão tem uma posição, uma textura, e não pode deixar outras coisas passarem por ele. Para isso, ele pode ter os componentes `Position`, `Sprite` e `BoxCollider`. Mas os componentes não são responsáveis por estas funções, eles apenas guardam informações específicas sobre a coisa a qual pertencem. É aí que entra o `Script`, que age sobre as coisas que são relevantes para ele. O script `Renderer`, por exemplo, se interessa pelas coisas com o componente `Sprite`, e desenha a textura delas na tela.
+`CoisaCore` manages everything. It keeps one scene loaded at a time, which can be a menu, loading screen, 
+game level, etc. A `Scene` maintains a list of Coisas, which are game entities, and a Coisa maintains a 
+list of Components. Everything in the game is a Coisa, the player, the enemy, walls, ground, etc. Each
+coisa is defined by its components, for example, a wall has a position, a texture and can't let things 
+pass through it. For that, it needs to have the components `Position`, `Sprite` and `BoxCollider`. But 
+components aren't directly responsible for these behaviors , they only store information. Acting on this
+information is the role of Scripts, they're the ones to manipulate Coisas. For example, the `Renderer` 
+script is interested with Coisas with the `Sprite` component. It reads the texture info stored on the 
+component and renders it on the screen.  
 
+A player however can be more complex:
+- It can have an animation when moving. The `Animation` component stores info about the animation 
+itself, while the `Animator` script changes the sprite so the animation flows
+- It needs to be controlled, so a component can store stuff like his speed while a script updates 
+its position
+- The player needs to control it via inputs, another component, another script, and so on..
 
-Um personagem já é uma coisa mais complexa:
-- Ele pode ter uma animação quando ele está andando. Um componente `Animation` indica qual é a animação da coisa, enquanto um script `Animator` manipula coisas com esse componente, mudando o sprite atual para o frame da animação
-- Ele precisa ser controlavel(andar, pular, morrer...). Com outro componente, que vai guardar coisas como a velocidade do personagem, um script pode pegar e atualizar a posição atual da coisa
-- O jogador precisa controlar o personagem. Outro componente e outro script, para verificar a entrada do jogador.
-
-Outras coisas no jogo vão precisar realizar outras funções. Por isso, o sistema deixa fácil a criação de novos componentes . Mais adiante isso será explicado com mais detalhes.
+Other stuff in the game will need different behavior, so this system makes it easy to create new components
+and scripts, which will be explained in more detail in a bit.
 
 
 ### coisaCore
-É o núcleo do sistema. Ele tem registrado todas as scenes e scripts criados. A partir dele se carrega as scenes. Quando uma coisa nova é criada, ele coloca a coisa na scene atual, e verifica com os scripts carregados se alguém quer a coisa recém crid coisas nos scripts.
+It's the system's core. It keeps track of all the scenes and scripts created, loads scenes, creates coisas
+in the currently loaded scene and makes the connections between components and scripts interested in said
+components.
 
 __`cCore.loadScene(s)`__
-Carrega a scene `s`. Todos scripts são atualizados, tirando as coisas da scene antiga e carregando as coisas da scene atual.
-`s`: A scene a ser carregada(table)
-`s`: Nome da scene a ser carregada(string)
+Load the scene `s`. All scripts and coisas are reseted.
+- `s`: The scene to be loaded (table)
 
 __`cCore.update(dt)`__
-Necessário para chamar as callbacks `update` nas scenes e scripts
-`dt`: deltaTime
+Needs to be called on `update`, necessary for the system to function.
+- `dt`: deltaTime, the time elapsed between frames
 
 __`cCore.draw()`__
-Necessário para chamar as callbacks `draw` nas scenes e scripts
+Needs to be called on `draw`, necessary for the system to function.
 
 ### Scene
-A ideia é existir uma para cada estado de jogo(menu, loading, jogo, etc). Guarda uma lista de coisas. Nela é pessível colocar uma lógica de jogo mais geral.
+Used to manage the game state. It holds a list of coisas. It can also hold game logic specific for a scene.
 
-__`Scene(nome)`__
-Cria uma nova scene e a registra no coisaCore
-`nome`: nome para a nova scene
-Retorna a table da nova scene
+__`Scene(name)`__
+Creates a new scene and registers it on coisaCore
+- `name`: name of the new scene (string)
 
-Callbacks suportadas:
+Returns a table with the new scene
+
+#### Supported callbacks:
 __`:init()`__
-É chamada na primeira vez que a scene é carregada
+Called once when the scene is first loaded
 
 __`:enter()`__
-É chamada todas as vezes em que a scene é carregada
+Called every time a scene is loaded
 
 __`:exit()`__
-É chamada quando a scene é descarregada
+Called every time the scene is unloaded
 
 __`:draw()`__
-Mesmo que love.draw()
+Same as love.draw()
 
 __`:update(dt)`__
-Mesmo que love.update(dt)
+Same as love.update(dt)
 
 __`:lateUpdate(dt)`__
-É chamado a todo update depois que todos os scripts já executaram
+Called every frame after all the scripts ran their `update()`
 
 ### Coisa
-Uma entidade no jogo, ou seja, qualquer coisa individual no jogo (personagem, inimigo, chão, parede, etc). Serve como um recipiente para componentes.
+A game entity which holds components.
 
-__`Coisa(nome, <componentes>)`__
-Cria uma nova coisa na scene atual
-`nome`: Nome da nova coisa
-`componentes`: Uma table com componentes iniciais para essa coisa
-Retorna a table da coisa criada
+__`Coisa(...components)`__
+Creates a new coisa in the current scene
+`...components`: any number of components for the coisa to be initialized with
+Returns a table of the created coisa
 
-__`:addComponent(comp)`__ 
+__`:addComponent(component)`__ 
 
-__`:removeComponent(comp)`__
+__`:removeComponent(component)`__
 
 __`:destroy()`__
 
 ### `Component`
-Serve para definir o que a coisa é.
+Defines what the coisa is, holds information that will be used by scripts
 
-__`Component(handle, propriedades)`__
-Cria um novo componente
-`handle`: Nome da variavel que vai conter este componente na coisa
-`propriedades`: Table com as prorpiedades que o componente tem
+__`Component(handle, properties)`__
+Creates a new component
+`handle`: component identifier, will be used to access the component in a Coisa
+`properties`: Table of properties that the component can hold
 
-Exemplo:
+Example:
 ```lua
-Character = Component("char", {    --Cria um novo componente Character
-    speed = 10,                    --Com as prorpiedades speed e jumpHeight
-    jumpHeight = 3                 --Cujos valores padrão são 10 e 3
+Character = Component("char", {    -- Creates a new component Character
+    speed = 10,                    -- with properties speed and jumpHeight
+    jumpHeight = 3                 -- with default values 10 and 3
 })
 
---Cria uma coisa com o componente criado, modificando o valor de speed
-player = Coisa("player", Character({speed = 20}))    
+-- Create a coisa with the created component 
+player = Coisa("player", Character({ speed = 20 }))    
 
---Modifica um valor do componente depois de ele ter sido criado
+-- Modify a value in the component utilizing it's handle 'char' 
 player.char.jumpHeight = 4
 ```
 ### `Script`
-São neles que a maior parte lógica do jogo fica. Um script tem interesse em coisas com determinados componentes. Então, todas as coisas que se encaixam nas especificações do script são passadas para as callbacks dele, para que ele as manipule como quiser.
+Holds the game logic. A script acts upon Coisas with specific components, which 
+are specified when creating the script. CoisaCore handles connecting scripts 
+with relevant Coisas, so the script itself can contain only game logic.
 
-__`Script(req)`__
-Cria um novo script e já o registra no cCore.
-`req`: Table com os componentes requeridos por esse script
+__`Script(requirements)`__
+Creates a new script and register it on cCore.
+`requirements`: Table with components required by this script
 
-__Callbacks suportadas:__
+__Callbacks:__
 __`:init(c)`__
-Chamada quando uma nova coisa `c` é criada
+Called when a new coisa `c` is created
 
 __`:updateOnce(dt)`__
-Chamada uma vez a cada update(), independente se o script tem ou não coisas
+Called once every `update`, unrelated to registered coisas
 
 __`:update(c, dt)`__
-Chamada para cada coisa `c` do script, a cada update()
+Called every `update` for every registered coisa `c`
 
 __`:lateUpdateOnce(dt)`__
-Chamada uma vez a cada update() depois de todos os updates, independente se o script tem ou não coisas
+Called once every `update`, unrelated to registered coisas, after all `update` calls 
+are done
 
 __`:lateUpdate(c, dt)`__
-Chamada para cada coisa `c` do script, a cada update() depois de todos os updates
+Called every `update` for every registered coisa `c`, after all `update` calls are
+done 
 
 __`:draw(c)`__
-Chamada para cada coisa `c` do script, a cada draw()
+Called every `draw` for every registered coisa `c`
 
 __`:drawBefore()`__
-Chamada uma vez antes de chamar qualquer draw das coisas
+Called once every `draw` before calling `draw` for every coisa
 
 __`:drawAfter()`__
-Chamada uma vez depois de chamar todos os draw das coisas
+Called once every `draw` after calling `draw` for every coisa
 
 __`:onRemoval(c)`__
-Chamada ao remover a coisa `c` do script, seja porque a coisa foi destruída ou porque ela não se encaixa mais nos requerimentos do scripts
+Called when unregistering a coisa from this script, either because it was destroyed or 
+one of the required components was removed
 
-Exemplo:
+Example:
 ```lua
---Um simples renderizador
-Renderer = Script({Sprite})    --Só posso renderizar se a coisa tiver um sprite pra renderizar
+-- A simple renderer
+Renderer = Script({ Sprite, Position })    -- We can only render a coisa if it has a Sprite component
 
-function Renderer:draw(c)    --Para cada coisa com sprite, a cada draw...
-	love.graphics.setColor(c.sprite.color:value())    --Seta a cor
-	love.graphics.draw(c.sprite.texture, c.pos.x, c.pos.y)    --Desenha o sprite
+function Renderer:draw(c)
+    love.graphics.setColor(c.sprite.color:value())
+    love.graphics.draw(c.sprite.texture, c.pos.x, c.pos.y)
 end
 ```
 
+## Extra features
+The ECS system is already explained. The features described next are general utilities
+for making games with it.
 
 ### ResourceManager
-Foi criado para acabar com o problema de redundância na criação de recursos. Imagine, por exemplo, uma textura que é usada em duas partes diferentes de um jogo. Cada parte não sabe da existência da outra, então cada uma cria uma nova `Image` da textura, o que é dispendioso.
-O que o ResourceManager faz é manter uma tabela com todos os recursos do jogo. Assim, quando uma parte do jogo quer uma textura, ele chama o `ResourceMgr.get`, que retorna a textura se ela já existe, ou cria a textura, coloca na tabela de recursos, e a retorna. Quando a outra parte do jogo precisar dessa mesma textura, o ResourceManager vai retornar a mesma que ele já tinha criado antes.
-Para deixar o código mais limpo, também é possível usar ResourecManager.type.name, por exemplo:
-`R.texture.bullet`
-Que é equivalente a:
-`R.get("texture", "bullet")`
+Its role is to end the problem with redundancy when dealing with resources. For
+example, if the same texture is used in two different parts fo the game, each part
+will create its own `Image` resource from the texture, since they don't know about 
+each other.
+What ResourceManager does is maintain a table with all the game's resources. By using
+`ResourceMgr.get`, you will make sure that a resource will be reused if possible or 
+created if it doesn't exist yet. For syntax sugar, it's also possible to get resources
+by using `ResourceManager.[type].[name]` instead of 
+`ResourceManager.get([type], [name])`, for example `R.texture.bullet` instead of 
+`R.get("texture", "bullet")`.
 
 **`ResourceManager.get(type, name)`**
-Verifica a existencia do recurso do tipo `type` e nome `name`, tenta criar o recurso caso ele não exista, e retorna o recurso
+Returns the resource `name` of type `type`, either a cached one or a new one
 
 **`ResourceManager.add(type, name)`**
-Vai adicionar o recurso do tipe `type` e nome `name` caso ele não exista.
+Adds the resource `name` of type `type` if it doesn't already exist.
 
-__Tipos suportados:__
-**`texture`**: Textura normal. O ResourceManager tenta achar a textura dentro da pasta na variável `ResourceManager.textureFolder`, que é `textures` por padrão.
+__Supported types:__
+**`texture`**: A image resource. It tries to find the file in the folder indicated by
+`ResourceManager.textureFolder`, which is `textures` by default.
 
-**`animSheet`**: Arquivo lua de informação sobre animações em sprites. 
-Estrutura: 
+**`animSheet`**: Lua file with animations info.  
+Structure: 
 ```lua
 ->animSheet.lua
 return {
     {
-        name = "nome da animação",
-    	texture = [Image da spritesheet],
-    	size = [quantidade de frames],
-    	timestep = [segundos entre frames],
-    	loop = [se volta pro começo ao chegar ao fim],
-    	tilewidht = [largura do quad],
-    	tileheight = [altura do quad],
+        name = "name",
+    	texture = [spritesheet],
+    	size = [amount of frames],
+    	timestep = [time in seconds between frames],
+    	loop = [boolean, if should return to start after ending],
+    	tilewidth = [quad's width],
+    	tileheight = [quad's height],
     	frames = {
     		{quad = love.graphics.newQuad(...)},
     		...
@@ -204,6 +230,7 @@ return {
 }
 ```
 
-**`anim`**: Animação criada anteriormente ao carregar um `animSheet`
+**`anim`**: Animation created by loading a `animSheet` file.
 
-**`scene`**: Arquivo lua que retorna uma `Scene`. O ResourceManager procura na pasta na variável `ResourceManager.sceneFolder`, que é `scenes` por padrão.
+**`scene`**: Lua file that returns a `Scene`. ResourceManager will try to find it
+in the folder indicated by `ResourceManager.sceneFolder`, which is `scenes` by default.
